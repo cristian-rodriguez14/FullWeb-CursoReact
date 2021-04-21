@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import React from 'react';
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import Home from "./pages/Home";
@@ -14,6 +14,8 @@ import UpdateUser from "./pages/UpdateUser";
 import UpdateProduct from "./pages/UpdateProduct";
 import ShopCar from "./pages/ShopCar";
 import Drinks from "./pages/Drinks";
+
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
 import { Provider } from "react-redux";
 import store from "./store";
@@ -34,9 +36,9 @@ function App() {
             <Route exact path="/Users" component={AdmonUsers} />
             <Route exact path="/Users/new" component={NewUser} />
             <Route exact path="/Users/edit/:id" component={UpdateUser} />
-            <Route exact path="/Products" component={AdmonProd} />
-            <Route exact path="/Products/new" component={NewProduct} />
-            <Route exact path="/Products/edit/:id" component={UpdateProduct} />
+            <Route exact path="/products" component={AdmonProd} />
+            <Route exact path="/products/new" component={NewProduct} />
+            <Route exact path="/products/edit/:id" component={UpdateProduct} />
             <Route exact path="/ShopCar/:id" component={ShopCar} />
             <Route exact path="/Drinks" component={Drinks} />
           </Switch>

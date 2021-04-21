@@ -11,7 +11,7 @@ import {
   SET_UPDATE_PRODUCT,
   UPDATE_PRODUCT,
   UPDATE_PRODUCT_SUCCESS,
-  UPDATE_PRODUCT_ERROR,  
+  UPDATE_PRODUCT_ERROR,
 } from "../types";
 import clienteAxios from "../config/axios";
 import Swal from "sweetalert2";
@@ -52,101 +52,97 @@ const addProductError = (estado) => ({
 
 // R
 export function getProdAction() {
-    return async (dispatch) => {
-        dispatch( getProducts() );
+  return async (dispatch) => {
+    dispatch(getProducts());
 
-        try {
-            const respuesta = await clienteAxios.get('/products');
-            dispatch( getProductsSuccess(respuesta.data) )
-        } catch (error) {
-            console.log(error);
-            dispatch( getProductsError() )
-        }
+    try {
+      const respuesta = await clienteAxios.get("/products");
+      dispatch(getProductsSuccess(respuesta.data));
+    } catch (error) {
+      console.log(error);
+      dispatch(getProductsError());
     }
+  };
 }
 
 const getProducts = () => ({
-    type: READ_PRODUCT,
-    payload: true
+  type: READ_PRODUCT,
+  payload: true,
 });
 
-const getProductsSuccess = products => ({
-    type: READ_PRODUCT_SUCCESS,
-    payload: products
-})
+const getProductsSuccess = (products) => ({
+  type: READ_PRODUCT_SUCCESS,
+  payload: products,
+});
 const getProductsError = () => ({
-    type: READ_PRODUCT_ERROR, 
-    payload: true
+  type: READ_PRODUCT_ERROR,
+  payload: true,
 });
 
 // U
 export function setProduct(product) {
   return (dispatch) => {
-      dispatch( setProductAction(product) )
-  }
+    dispatch(setProductAction(product));
+  };
 }
 
-const setProductAction = product => ({
+const setProductAction = (product) => ({
   type: SET_UPDATE_PRODUCT,
-  payload: product
-})
+  payload: product,
+});
 
 export function editProductAction(product) {
   return async (dispatch) => {
-      dispatch( editProduct() );
+    dispatch(editProduct());
 
-      try {
-          await clienteAxios.put(`/products/${product.id}`, product);    
-          dispatch( editProductSuccess(product) );
-      } catch (error) {
-          console.log(error);
-          dispatch( editProductError() );
-      }
-  }
+    try {
+      await clienteAxios.put(`/products/${product.id}`, product);
+      dispatch(editProductSuccess(product));
+    } catch (error) {
+      console.log(error);
+      dispatch(editProductError());
+    }
+  };
 }
 const editProduct = () => ({
-  type: UPDATE_PRODUCT
+  type: UPDATE_PRODUCT,
 });
 
-const editProductSuccess = producto => ({
+const editProductSuccess = (product) => ({
   type: UPDATE_PRODUCT_SUCCESS,
-  payload: producto
+  payload: product,
 });
 
 const editProductError = () => ({
   type: UPDATE_PRODUCT_ERROR,
-  payload: true
-})
+  payload: true,
+});
 
 // D
 export function deleteProductAction(id) {
   return async (dispatch) => {
-      dispatch(getDeleteProduct(id) );
+    dispatch(getDeleteProduct(id));
 
-      try {
-          await clienteAxios.delete(`/products/${id}`);
-          dispatch( deleteProductSuccess() );
+    try {
+      await clienteAxios.delete(`/products/${id}`);
+      dispatch(deleteProductSuccess());
 
-          Swal.fire(
-              'Eliminado',
-              'El producto se eliminó correctamente',
-              'success'
-          )
-      } catch (error) {
-          console.log(error);
-          dispatch( deleteProductError() );
-      }
-  }
+      Swal.fire("Eliminado", "El producto se eliminó correctamente", "success");
+    } catch (error) {
+      console.log(error);
+      dispatch(deleteProductError());
+    }
+  };
 }
 
-const getDeleteProduct = id => ({
+const getDeleteProduct = (id) => ({
   type: DELETE_PRODUCT,
-  payload: id
+  payload: id,
 });
 const deleteProductSuccess = () => ({
-  type: DELETE_PRODUCT_SUCCESS
-})
+  type: DELETE_PRODUCT_SUCCESS,
+});
 const deleteProductError = () => ({
   type: DELETE_PRODUCT_ERROR,
-  payload: true
+  payload: true,
 });

@@ -1,7 +1,7 @@
 {
   "users": [
     {
-      "foto": "Perfil1.png",
+      "photo": "Perfil1.png",
       "email": "chuo.rod@gmail.com",
       "password": "jr1234",
       "rol": "admin",
@@ -9,7 +9,7 @@
       "id": 1
     },
     {
-      "foto": "Perfil2.png",
+      "photo": "Perfil2.png",
       "email": "cristian.rodriguez9011@gmail.com",
       "password": "passwd",
       "rol": "user",

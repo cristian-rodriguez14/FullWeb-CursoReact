@@ -14,10 +14,10 @@ h1 a {
   font-size: 1.8rem;
 }
 h1 a.text-light:hover {
-  color: white!important;
-  text-decoration: none!important;
+  color: white !important;
+  text-decoration: none !important;
 }
-.nuevo-post{
+.nuevo-post {
   font-weight: bold;
   text-transform: uppercase;
 }
@@ -31,21 +31,26 @@ h1 a.text-light:hover {
 }
 
 .navbar .btn {
-  flex:1;
+  flex: 1;
 }
-@media (min-width:768px){
-    .navbar .btn {
-      flex: 0 1 auto;
-    }
+@media (min-width: 768px) {
+  .navbar .btn {
+    flex: 0 1 auto;
+  }
 }
 .acciones {
   margin: 1rem 0;
 }
-@media (min-width:768px) {
-  .acciones{
+@media (min-width: 768px) {
+  .acciones {
     margin: 0;
   }
 }
-.acciones > *{
+.acciones > * {
   flex: 1;
+}
+
+.footer {
+  margin-top: 5rem;
+  text-align: center;
 }

@@ -3,7 +3,7 @@ import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { getProdAction } from "../actions/productActions";
 import Producto from "../components/Producto";
-
+ 
 const AdmonProd = () => {
   const dispatch = useDispatch();
   useEffect(() => {
@@ -13,7 +13,7 @@ const AdmonProd = () => {
   }, []);
   const products = useSelector((state) => state.products.products);
   const error = useSelector((state) => state.products.error);
-  const cargando = useSelector(state => state.products.loading);
+  const cargando = useSelector((state) => state.products.loading);
   return (
     <>
       <h2 className="text-center my-5">Listado de Productos</h2>
@@ -36,14 +36,11 @@ const AdmonProd = () => {
           </tr>
         </thead>
         <tbody>
-        { products.length === 0 ? 'No hay nada' : (
-                       products.map(product => (
-                           <Producto
-                                key={product.id}
-                                product={product}
-                           />
-                       ))
-                   ) }
+          {products.length === 0
+            ? "No hay nada"
+            : (products.map((product) => (
+                <Producto key={product.id} product={product} />
+              )))}
         </tbody>
       </table>
     </>

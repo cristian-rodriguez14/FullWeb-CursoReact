@@ -50,7 +50,7 @@ export default function (state = initialState, action) {
         ...state,
         loading: false,
         error: null,
-        productos: action.payload,
+        products: action.payload,
       };
     case DELETE_PRODUCT:
       return {
@@ -76,7 +76,7 @@ export default function (state = initialState, action) {
         productoeditar: null,
         products: state.products.map((product) =>
           product.id === action.payload.id
-            ? product = action.payload
+            ? (product = action.payload)
             : product
         ),
       };

@@ -1,43 +1,42 @@
-import React, {useState} from "react";
-import { useDispatch, useSelector } from 'react-redux';
+import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
-import { addNewProdAction } from '../actions/productActions'
-import { mostrarAlerta, ocultarAlertaAction } from '../actions/alertaActions';
+import { addNewProdAction } from "../actions/productActions";
+import { mostrarAlerta, ocultarAlertaAction } from "../actions/alertaActions";
 
-const NewProduct = ({history}) => {
-
-  const [image, setImage] = useState('');
-  const [name, setName] = useState('');
+const NewProduct = ({ history }) => {
+  const [image, setImage] = useState("");
+  const [name, setName] = useState("");
   const [price, setPrice] = useState(0);
-  const [description, setDescription] = useState('');
+  const [description, setDescription] = useState("");
   const [state, setState] = useState(true);
 
   const dispatch = useDispatch();
 
-  const cargando = useSelector( state => state.products.loading );
-  const error = useSelector(state => state.products.error);
-  const alerta = useSelector(state => state.alerta.alerta);
+  const cargando = useSelector((state) => state.products.loading);
+  const error = useSelector((state) => state.products.error);
+  const alerta = useSelector((state) => state.alerta.alerta);
 
-  const addProduct = product => dispatch( addNewProdAction(product) );
-  
-  const submitNew = e => {
+  const addProduct = (product) => dispatch(addNewProdAction(product));
+
+  const submitNew = (e) => {
     e.preventDefault();
-    if(image.trim() === '') {
-      setImage("Default.png")
+    if (image.trim() === "") {
+      setImage("Default.png");
     }
-    if(name.trim() === '' || price.trim() <= 0 || description.trim() === '') {
+    if (name.trim() === "" || price.trim() <= 0 || description.trim() === "") {
       const alerta = {
-        msg: 'Ambos campos son obligatorios',
-        classes: 'alert alert-danger text-center text-uppercase p3'
-    }
-    dispatch( mostrarAlerta(alerta) );
+        msg: "Ambos campos son obligatorios",
+        classes: "alert alert-danger text-center text-uppercase p3",
+      };
+      dispatch(mostrarAlerta(alerta));
 
-    return;
+      return;
     }
-    dispatch( ocultarAlertaAction() );
-    addProduct({image,name,price,description,state});
-    history.push('/');
-  }
+    dispatch(ocultarAlertaAction());
+    addProduct({ image, name, price, description, state });
+    history.push("/");
+  };
 
   return (
     <div className="row justify-content-center">
@@ -47,16 +46,16 @@ const NewProduct = ({history}) => {
             <h2 className="text-center mb-4 font-weight-bold">
               Agregar Nuevo Producto
             </h2>
-            {alerta ? <p className={alerta.classes}> {alerta.msg} </p> : null }
+            {alerta ? <p className={alerta.classes}> {alerta.msg} </p> : null}
             <form onSubmit={submitNew}>
-            <div className="form-group">
+              <div className="form-group">
                 <label>Imagen del Producto</label>
                 <input
                   type="file"
                   className="form-control"
                   name="image"
                   value={image}
-                  onChange={e => setImage(e.target.value)}
+                  onChange={(e) => setImage(e.target.files)}
                 />
               </div>
               <div className="form-group">
@@ -67,7 +66,7 @@ const NewProduct = ({history}) => {
                   placeholder="Nombre Producto"
                   name="name"
                   value={name}
-                  onChange={e => setName(e.target.value)}
+                  onChange={(e) => setName(e.target.value)}
                 />
               </div>
               <div className="form-group">
@@ -78,7 +77,7 @@ const NewProduct = ({history}) => {
                   placeholder="Precio Producto"
                   name="price"
                   value={price}
-                  onChange={e => setPrice(e.target.value)}
+                  onChange={(e) => setPrice(e.target.value)}
                 />
               </div>
               <div className="form-group">
@@ -87,7 +86,7 @@ const NewProduct = ({history}) => {
                   className="form-control"
                   name="description"
                   value={description}
-                  onChange={e => setDescription(e.target.value)}
+                  onChange={(e) => setDescription(e.target.value)}
                 ></textarea>
               </div>
               <div className="form-group">
@@ -97,7 +96,7 @@ const NewProduct = ({history}) => {
                   className="form-control"
                   name="state"
                   value={state}
-                  onChange={e => setState(e.target.value)}
+                  onChange={(e) => setState(e.target.value)}
                 />
               </div>
               <button
@@ -107,8 +106,12 @@ const NewProduct = ({history}) => {
                 Agregar
               </button>
             </form>
-            { cargando ? <p>Cargando...</p> : null }
-            { error ? <p className="alert alert-danger p2 mt-4 text-center">Hubo un error</p> : null }
+            {cargando ? <p>Cargando...</p> : null}
+            {error ? (
+              <p className="alert alert-danger p2 mt-4 text-center">
+                Hubo un error
+              </p>
+            ) : null}
           </div>
         </div>
       </div>

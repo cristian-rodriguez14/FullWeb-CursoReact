@@ -1,5 +1,5 @@
 import React from "react";
-import {Link} from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const Header = () => {
   return (
@@ -12,7 +12,7 @@ const Header = () => {
         </h1>
       </div>
       <Link
-        to={"/Products/new"}
+        to={"/products/new"}
         className="btn btn-danger nuevo-post d-block d-md-inline-block"
       >
         Agregar Producto &#43;
