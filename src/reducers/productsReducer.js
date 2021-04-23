@@ -52,11 +52,11 @@ export default function (state = initialState, action) {
         error: null,
         products: action.payload,
       };
-    case DELETE_PRODUCT:
+    /* case DELETE_PRODUCT:
       return {
         ...state,
         productoeliminar: action.payload,
-      };
+      }; 
     case DELETE_PRODUCT_SUCCESS:
       return {
         ...state,
@@ -64,13 +64,15 @@ export default function (state = initialState, action) {
           (product) => product.id !== state.productoeliminar
         ),
         productoeliminar: null,
-      };
+      }; */
+    case DELETE_PRODUCT:
     case SET_UPDATE_PRODUCT:
       return {
         ...state,
         productoeditar: action.payload,
       };
     case UPDATE_PRODUCT_SUCCESS:
+    case DELETE_PRODUCT_SUCCESS:
       return {
         ...state,
         productoeditar: null,

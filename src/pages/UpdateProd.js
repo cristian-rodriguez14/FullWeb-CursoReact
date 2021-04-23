@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { editProductAction } from "../actions/productActions";
 import { useHistory } from "react-router-dom";
 
-const UpdateProduct = () => {
+const UpdateProd = () => {
   const history = useHistory();
   const dispatch = useDispatch();
 
@@ -12,7 +12,7 @@ const UpdateProduct = () => {
     name: "",
     price: "",
     description: "",
-    state: true,
+    state: "",
   });
 
   const editproduct = useSelector((state) => state.products.editproduct);
@@ -35,7 +35,7 @@ const UpdateProduct = () => {
 
     dispatch(editProductAction(product));
 
-    history.push("/");
+    history.push("/products");
   };
 
   return (
@@ -48,7 +48,7 @@ const UpdateProduct = () => {
             </h2>
             <form onSubmit={onSubmit}>
               <div className="form-group">
-                <label>Imagen del Producto</label>
+                <label htmlFor="image">Imagen del Producto</label>
                 <input
                   type="file"
                   className="form-control"
@@ -58,7 +58,7 @@ const UpdateProduct = () => {
                 />
               </div>
               <div className="form-group">
-                <label>Nombre Producto</label>
+                <label htmlFor="name">Nombre Producto</label>
                 <input
                   type="text"
                   className="form-control"
@@ -69,7 +69,7 @@ const UpdateProduct = () => {
                 />
               </div>
               <div className="form-group">
-                <label>Precio Producto</label>
+                <label htmlFor="price">Precio Producto</label>
                 <input
                   type="number"
                   className="form-control"
@@ -80,7 +80,7 @@ const UpdateProduct = () => {
                 />
               </div>
               <div className="form-group">
-                <label>Descripcion</label>
+                <label htmlFor="description">Descripcion</label>
                 <textarea
                   className="form-control"
                   name="description"
@@ -89,7 +89,6 @@ const UpdateProduct = () => {
                 ></textarea>
               </div>
               <div className="form-group">
-                <label>Estado Producto</label>
                 <input
                   type="hidden"
                   className="form-control"
@@ -112,4 +111,4 @@ const UpdateProduct = () => {
   );
 };
 
-export default UpdateProduct;
+export default UpdateProd;

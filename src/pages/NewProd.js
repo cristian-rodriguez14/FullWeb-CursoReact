@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import { addNewProdAction } from "../actions/productActions";
+import { addNewProdAction, addNewImageAction } from "../actions/productActions";
 import { mostrarAlerta, ocultarAlertaAction } from "../actions/alertaActions";
+import {useHistory} from "react-router";
 
-const NewProduct = ({ history }) => {
+const NewProd = () => {
+  const [imageName, setImageName] = useState("");
   const [image, setImage] = useState("");
   const [name, setName] = useState("");
   const [price, setPrice] = useState(0);
@@ -12,16 +14,23 @@ const NewProduct = ({ history }) => {
   const [state, setState] = useState(true);
 
   const dispatch = useDispatch();
+  const history = useHistory();
+
+  const UploadImage = (e) => {
+    setImageName(e.target.files[0].name);
+    setImage(e.target.files[0]);
+  }
 
   const cargando = useSelector((state) => state.products.loading);
   const error = useSelector((state) => state.products.error);
   const alerta = useSelector((state) => state.alerta.alerta);
 
   const addProduct = (product) => dispatch(addNewProdAction(product));
+  const addImage = (image) => dispatch(addNewImageAction(image));
 
   const submitNew = (e) => {
     e.preventDefault();
-    if (image.trim() === "") {
+    if (imageName.trim() === "") {
       setImage("Default.png");
     }
     if (name.trim() === "" || price.trim() <= 0 || description.trim() === "") {
@@ -34,8 +43,9 @@ const NewProduct = ({ history }) => {
       return;
     }
     dispatch(ocultarAlertaAction());
-    addProduct({ image, name, price, description, state });
-    history.push("/");
+    addImage({image});
+    addProduct({ imageName, name, price, description, state });
+    history.push("/products");
   };
 
   return (
@@ -49,17 +59,16 @@ const NewProduct = ({ history }) => {
             {alerta ? <p className={alerta.classes}> {alerta.msg} </p> : null}
             <form onSubmit={submitNew}>
               <div className="form-group">
-                <label>Imagen del Producto</label>
+                <label htmlFor="image">Imagen del Producto</label>
                 <input
                   type="file"
                   className="form-control"
                   name="image"
-                  value={image}
-                  onChange={(e) => setImage(e.target.files)}
+                  onChange={UploadImage}
                 />
               </div>
               <div className="form-group">
-                <label>Nombre Producto</label>
+                <label htmlFor="name">Nombre Producto</label>
                 <input
                   type="text"
                   className="form-control"
@@ -70,7 +79,7 @@ const NewProduct = ({ history }) => {
                 />
               </div>
               <div className="form-group">
-                <label>Precio Producto</label>
+                <label htmlFor="number">Precio Producto</label>
                 <input
                   type="number"
                   className="form-control"
@@ -81,7 +90,7 @@ const NewProduct = ({ history }) => {
                 />
               </div>
               <div className="form-group">
-                <label>Descripcion</label>
+                <label htmlFor="description">Descripcion</label>
                 <textarea
                   className="form-control"
                   name="description"
@@ -90,7 +99,6 @@ const NewProduct = ({ history }) => {
                 ></textarea>
               </div>
               <div className="form-group">
-                <label>Estado Producto</label>
                 <input
                   type="hidden"
                   className="form-control"
@@ -119,4 +127,4 @@ const NewProduct = ({ history }) => {
   );
 };
 
-export default NewProduct;
+export default NewProd;

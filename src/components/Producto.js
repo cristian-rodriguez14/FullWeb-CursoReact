@@ -7,12 +7,12 @@ import { useHistory } from "react-router-dom";
 import { deleteProductAction, setProduct } from "../actions/productActions";
 
 const Producto = ({ product }) => {
-  const { image, name, price, description, state, id } = product;
+  const { imageName, name, price, description, state } = product;
 
   const dispatch = useDispatch();
   const history = useHistory();
 
-  const confirmDeleteProduct = (id) => {
+  const confirmDeleteProduct = (product) => {
     Swal.fire({
       title: "¿Estas seguro?",
       text: "Un producto que se elimina no se puede recuperar",
@@ -25,19 +25,34 @@ const Producto = ({ product }) => {
     }).then((result) => {
       if (result.value) {
         // pasarlo al action
-        dispatch(deleteProductAction(id));
+        product.state = false;
+        dispatch(deleteProductAction(product));
       }
     });
   };
 
   const toEdit = (product) => {
-    dispatch(setProduct(product));
-    history.push(`/products/edit/${product.id}`);
+    /* dispatch(setProduct(product));
+    history.push(`/products/edit/${product.id}`); */
+    Swal.fire({
+      title: "¿Estas seguro?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Si, editar!!",
+      cancelButtonText: "Cancelar",
+    }).then((result) => {
+      if (result.value) {
+        dispatch(setProduct(product));
+        history.push(`/products/edit/${product.id}`);
+      }
+    });
   };
 
   return (
     <tr>
-      <td>{image}</td>
+      <td>{imageName}</td>
       <td>{name}</td>
       <td>${price}</td>
       <td>{description}</td>
@@ -53,7 +68,8 @@ const Producto = ({ product }) => {
         <button
           type="button"
           className="btn btn-danger"
-          onClick={() => confirmDeleteProduct(id)}
+          // onClick={() => confirmDeleteProduct(id)}
+          onClick={() => confirmDeleteProduct(product)}
         >
           Eliminar{" "}
         </button>

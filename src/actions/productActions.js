@@ -5,7 +5,7 @@ import {
   READ_PRODUCT,
   READ_PRODUCT_SUCCESS,
   READ_PRODUCT_ERROR,
-  DELETE_PRODUCT,
+  // DELETE_PRODUCT,
   DELETE_PRODUCT_SUCCESS,
   DELETE_PRODUCT_ERROR,
   SET_UPDATE_PRODUCT,
@@ -21,7 +21,7 @@ export function addNewProdAction(product) {
   return async (dispatch) => {
     dispatch(addProduct());
     try {
-      await clienteAxios.post("/products", product);
+      await clienteAxios.post("/products", product);      
       dispatch(addProductSuccess(product));
       Swal.fire("Correcto", "El producto se agregó correctamente", "success");
     } catch (error) {
@@ -33,6 +33,21 @@ export function addNewProdAction(product) {
       });
     }
   };
+}
+
+export function addNewImageAction(image) {
+  return async () => {
+    try {
+      await clienteAxios.post(`/products/${image.name}`, image);
+      Swal.fire("Correcto", "La imagen se agregó correctamente", "success");
+    } catch (error) {
+      Swal.fire({
+        icon: "error",
+        title: "Hubo un error",
+        text: "Hubo un error, intenta de nuevo",
+      });
+    }
+  }
 }
 
 const addProduct = () => ({
@@ -119,29 +134,46 @@ const editProductError = () => ({
 });
 
 // D
-export function deleteProductAction(id) {
+// export function deleteProductAction(id) {
+export function deleteProductAction(product) {
   return async (dispatch) => {
-    dispatch(getDeleteProduct(id));
+    // dispatch(getDeleteProduct(id));
+    dispatch(getDeleteProduct());
 
     try {
-      await clienteAxios.delete(`/products/${id}`);
-      dispatch(deleteProductSuccess());
-
+      //await clienteAxios.delete(`/products/${id}`);
+      await clienteAxios.put(`/products/${product.id}`, product);
+      //dispatch(deleteProductSuccess());
+      dispatch(deleteProductSuccess(product));
       Swal.fire("Eliminado", "El producto se eliminó correctamente", "success");
     } catch (error) {
-      console.log(error);
+      // dispatch(deleteProductError());
       dispatch(deleteProductError());
     }
   };
 }
 
-const getDeleteProduct = (id) => ({
+/* const getDeleteProduct = (id) => ({
   type: DELETE_PRODUCT,
   payload: id,
 });
 const deleteProductSuccess = () => ({
   type: DELETE_PRODUCT_SUCCESS,
 });
+const deleteProductError = () => ({
+  type: DELETE_PRODUCT_ERROR,
+  payload: true,
+}); */
+
+const getDeleteProduct = () => ({
+  type: UPDATE_PRODUCT,
+});
+
+const deleteProductSuccess = (product) => ({
+  type: DELETE_PRODUCT_SUCCESS,
+  payload: product,
+});
+
 const deleteProductError = () => ({
   type: DELETE_PRODUCT_ERROR,
   payload: true,

@@ -35,9 +35,9 @@ export const DELETE_USER_SUCCESS = "DELETE_USER_SUCCESS";
 export const DELETE_USER_ERROR = "DELETE_USER_ERROR";
 
 // CRUD Carrito
-export const ADD_CAR = "ADD_CAR";
-export const ADD_CAR_SUCCESS = "ADD_CAR_SUCCESS";
-export const ADD_CAR_ERROR = "ADD_CAR_ERROR";
+export const CREATE_CAR = "CREATE_CAR";
+export const CREATE_CAR_SUCCESS = "CREATE_CAR_SUCCESS";
+export const CREATE_CAR_ERROR = "CREATE_CAR_ERROR";
 
 export const READ_CAR = "READ_CAR";
 export const READ_CAR_SUCCESS = "READ_CAR_SUCCESS";
