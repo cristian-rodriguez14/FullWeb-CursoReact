@@ -15,7 +15,15 @@ import {
 
 const initialState = {
   products: [],
-  error: null,
+  imagen: "",
+  productForm: {
+    image: "",
+    name: "",
+    price: "",
+    description: "",
+    state: "",
+  },
+  error: null,  
   loading: false,
   productoeliminar: null,
   productoeditar: null,
@@ -25,11 +33,32 @@ const initialState = {
 export default function (state = initialState, action) {
   switch (action.type) {
     case READ_PRODUCT:
+      return {
+        ...state,
+        products: action.payload,
+      };
+    case CREATE_PRODUCT:
+      return {
+        ...state,
+        productForm: {
+          image: "",
+          name: "",
+          price: "",
+          description: "",
+          state: "",
+        },
+      };
+    case DELETE_PRODUCT:
+      return {
+        ...state,
+        productoeditar: action.payload,
+      };
+    /* case READ_PRODUCT:
     case CREATE_PRODUCT:
       return {
         ...state,
         loading: action.payload,
-      };
+      }; */
     case CREATE_PRODUCT_SUCCESS:
       return {
         ...state,
@@ -65,7 +94,7 @@ export default function (state = initialState, action) {
         ),
         productoeliminar: null,
       }; */
-    case DELETE_PRODUCT:
+    //case DELETE_PRODUCT:
     case SET_UPDATE_PRODUCT:
       return {
         ...state,

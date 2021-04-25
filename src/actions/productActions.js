@@ -14,6 +14,7 @@ import {
   UPDATE_PRODUCT_ERROR,
 } from "../types";
 import clienteAxios from "../config/axios";
+import { db } from "../config/firebase";
 import Swal from "sweetalert2";
 
 // C
@@ -21,7 +22,7 @@ export function addNewProdAction(product) {
   return async (dispatch) => {
     dispatch(addProduct());
     try {
-      await clienteAxios.post("/products", product);      
+      await clienteAxios.post("/products", product);
       dispatch(addProductSuccess(product));
       Swal.fire("Correcto", "El producto se agregó correctamente", "success");
     } catch (error) {
@@ -33,21 +34,6 @@ export function addNewProdAction(product) {
       });
     }
   };
-}
-
-export function addNewImageAction(image) {
-  return async () => {
-    try {
-      await clienteAxios.post(`/products/${image.name}`, image);
-      Swal.fire("Correcto", "La imagen se agregó correctamente", "success");
-    } catch (error) {
-      Swal.fire({
-        icon: "error",
-        title: "Hubo un error",
-        text: "Hubo un error, intenta de nuevo",
-      });
-    }
-  }
 }
 
 const addProduct = () => ({
@@ -74,7 +60,6 @@ export function getProdAction() {
       const respuesta = await clienteAxios.get("/products");
       dispatch(getProductsSuccess(respuesta.data));
     } catch (error) {
-      console.log(error);
       dispatch(getProductsError());
     }
   };
@@ -114,7 +99,6 @@ export function editProductAction(product) {
       await clienteAxios.put(`/products/${product.id}`, product);
       dispatch(editProductSuccess(product));
     } catch (error) {
-      console.log(error);
       dispatch(editProductError());
     }
   };
@@ -153,18 +137,6 @@ export function deleteProductAction(product) {
   };
 }
 
-/* const getDeleteProduct = (id) => ({
-  type: DELETE_PRODUCT,
-  payload: id,
-});
-const deleteProductSuccess = () => ({
-  type: DELETE_PRODUCT_SUCCESS,
-});
-const deleteProductError = () => ({
-  type: DELETE_PRODUCT_ERROR,
-  payload: true,
-}); */
-
 const getDeleteProduct = () => ({
   type: UPDATE_PRODUCT,
 });
@@ -177,4 +149,122 @@ const deleteProductSuccess = (product) => ({
 const deleteProductError = () => ({
   type: DELETE_PRODUCT_ERROR,
   payload: true,
+});
+
+// Firebase CRUD
+/* export function uploadImage(productImage) {
+  return async () => {
+    try {
+      const uploadTask = storage
+        .ref(`images/Products/${productImage.image.name}`)
+        .put(productImage.image);
+      uploadTask.on(
+        "state_changed",
+        (snapshot) => {},
+        (error) => {
+          console.log(error);
+        },
+        () => {
+          storage
+            .ref("images/Products")
+            .child(productImage.image.name)
+            .getDownloadURL()
+            .then((url) => {
+              sendURLtoPage(url)
+            });
+        }
+      );
+    } catch (error) {}
+  };
+} */
+// Create in Firestore
+export function createProductAction(product) {
+  return async (dispatch) => {
+    try {
+      await db.collection("products").doc().set(product);
+      dispatch(createProductSuccess(product));
+      Swal.fire("Correcto", "El producto se agregó correctamente", "success");
+    } catch (error) {
+      dispatch(addProductError(true));
+      Swal.fire({
+        icon: "error",
+        title: "Hubo un error",
+        text: "Hubo un error, intenta de nuevo",
+      });
+    }
+  };
+}
+
+const createProductSuccess = () => ({
+  type: CREATE_PRODUCT,
+});
+
+// Read
+export function readProductAction() {
+  return async (dispatch) => {
+    try {
+      db.collection("products").onSnapshot((querySnapshot) => {
+        const response = [];
+        querySnapshot.forEach((doc) => {
+          response.push({ ...doc.data(), id: doc.id });
+        });
+        dispatch(readProductsSuccess(response));
+      });
+    } catch (error) {
+      dispatch(getProductsError());
+    }
+  };
+}
+
+const readProductsSuccess = (products) => ({
+  type: READ_PRODUCT,
+  payload: products,
+});
+
+// Update
+// First fill form
+export function fillForm(product) {
+  return (dispatch) => {
+    dispatch(fillFormAction(product));
+  };
+}
+
+const fillFormAction = (product) => ({
+  type: SET_UPDATE_PRODUCT,
+  payload: product,
+});
+
+// Second do edition
+export function updateProductAction(product) {
+  return async (dispatch) => {
+    try {
+      await db.collection("products").doc(product.id).update(product);
+      dispatch(updateProductSuccess(product));
+    } catch (error) {
+      dispatch(editProductError());
+    }
+  };
+}
+
+const updateProductSuccess = (product) => ({
+  type: UPDATE_PRODUCT_SUCCESS,
+  payload: product,
+});
+
+// Delete
+export function suprProductAction(product) {
+  return async (dispatch) => {
+    try {
+      await db.collection("products").doc(product.id).update(product);
+      dispatch(suprProductSuccess(product));
+      Swal.fire("Eliminado", "El producto se eliminó correctamente", "success");
+    } catch (error) {
+      dispatch(deleteProductError());
+    }
+  };
+}
+
+const suprProductSuccess = (product) => ({
+  type: DELETE_PRODUCT_SUCCESS,
+  payload: product,
 });

@@ -4,10 +4,10 @@ import Swal from "sweetalert2";
 import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 
-import { deleteProductAction, setProduct } from "../actions/productActions";
+import { suprProductAction, fillForm } from "../actions/productActions";
 
 const Producto = ({ product }) => {
-  const { imageName, name, price, description, state } = product;
+  const { image, name, price, description } = product;
 
   const dispatch = useDispatch();
   const history = useHistory();
@@ -26,37 +26,22 @@ const Producto = ({ product }) => {
       if (result.value) {
         // pasarlo al action
         product.state = false;
-        dispatch(deleteProductAction(product));
+        dispatch(suprProductAction(product)); 
       }
     });
   };
 
   const toEdit = (product) => {
-    /* dispatch(setProduct(product));
-    history.push(`/products/edit/${product.id}`); */
-    Swal.fire({
-      title: "¿Estas seguro?",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Si, editar!!",
-      cancelButtonText: "Cancelar",
-    }).then((result) => {
-      if (result.value) {
-        dispatch(setProduct(product));
-        history.push(`/products/edit/${product.id}`);
-      }
-    });
+    dispatch(fillForm(product));
+    history.push(`/products/edit/${product.id}`);     
   };
 
   return (
     <tr>
-      <td>{imageName}</td>
+      <td><img src={image} alt="" style={{maxHeight: "100px", maxWidth: "200px"}}/></td>
       <td>{name}</td>
       <td>${price}</td>
       <td>{description}</td>
-      <td>{state}</td>
       <td className="acciones">
         <button
           type="button"

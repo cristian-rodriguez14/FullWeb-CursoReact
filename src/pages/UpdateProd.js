@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { editProductAction } from "../actions/productActions";
+import { updateProductAction } from "../actions/productActions";
 import { useHistory } from "react-router-dom";
+import { storage } from "../config/firebase";
 
 const UpdateProd = () => {
   const history = useHistory();
@@ -14,14 +15,42 @@ const UpdateProd = () => {
     description: "",
     state: "",
   });
+  const [img, setimg] = useState("")
 
-  const editproduct = useSelector((state) => state.products.editproduct);
+  const editproduct = useSelector((state) => state.products.productoeditar);
 
   useEffect(() => {
     setProduct(editproduct);
   }, [editproduct]);
 
+  const UploadImage = (e) => {
+    setimg(e.target.files[0]);
+  };
+
+  const guardarImagen = () => {
+    const uploadTask = storage.ref(`images/Products/${img.name}`).put(img);
+    uploadTask.on(
+      "state_changed",
+      (snapshot) => {},
+      (error) => {
+        console.log(error);
+      },
+      () => {
+        storage
+          .ref("images/Products")
+          .child(img.name)
+          .getDownloadURL()
+          .then((url) => {
+            alert("Imagen Guardada exitosamente");
+            setimg(url);
+          });
+      }
+    );
+  };
+
+  
   const onChange = (e) => {
+    product.image=img
     setProduct({
       ...product,
       [e.target.name]: e.target.value,
@@ -33,7 +62,7 @@ const UpdateProd = () => {
   const onSubmit = (e) => {
     e.preventDefault();
 
-    dispatch(editProductAction(product));
+    dispatch(updateProductAction(product));
 
     history.push("/products");
   };
@@ -46,15 +75,18 @@ const UpdateProd = () => {
             <h2 className="text-center mb-4 font-weight-bold">
               Editar Producto
             </h2>
+            <button onClick={guardarImagen} className="btn btn-primary">
+                  Guardar Imagen
+                </button>
             <form onSubmit={onSubmit}>
               <div className="form-group">
-                <label htmlFor="image">Imagen del Producto</label>
+                <label htmlFor="img">Imagen del Producto</label><br />
+                <img src={image} alt="" style={{maxHeight: "200px", maxWidth: "200px"}}/>
                 <input
                   type="file"
                   className="form-control"
-                  name="image"
-                  value={image}
-                  onChange={onChange}
+                  name="img"
+                  onChange={UploadImage}
                 />
               </div>
               <div className="form-group">

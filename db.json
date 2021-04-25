@@ -23,7 +23,7 @@
       "name": "Blue Eyes",
       "price": 500,
       "description": "Ojos Azules",
-      "state": false,
+      "state": true,
       "id": 1
     },
     {
@@ -31,7 +31,7 @@
       "name": "Lemon Juice",
       "price": 100,
       "description": "Jugo de Limón",
-      "state": false,
+      "state": true,
       "id": 2
     },
     {
@@ -39,7 +39,7 @@
       "name": "Nanika",
       "price": 50,
       "description": "Lo que sea",
-      "state": false,
+      "state": true,
       "id": 3
     },
     {
@@ -55,8 +55,48 @@
       "name": "Un esqueleto",
       "price": "4999",
       "description": "Algo con forma de esqueleto",
-      "state": false,
+      "state": true,
       "id": 5
+    },
+    {
+      "imageName": "Producto1.png",
+      "name": "Blue Eyes",
+      "price": 500,
+      "description": "Ojos Azules",
+      "state": true,
+      "id": 6
+    },
+    {
+      "imageName": "Producto2.png",
+      "name": "Lemon Juice",
+      "price": 100,
+      "description": "Jugo de Limón",
+      "state": true,
+      "id": 7
+    },
+    {
+      "imageName": "Producto3.png",
+      "name": "Nanika",
+      "price": 50,
+      "description": "Lo que sea",
+      "state": true,
+      "id": 8
+    },
+    {
+      "imageName": "Screenshot Aglaya Fabian's Phone.jpg",
+      "name": "Aglaya Game",
+      "price": "10000",
+      "description": "Un juego de mesa",
+      "state": true,
+      "id": 9
+    },
+    {
+      "imageName": "skeleton.jpg",
+      "name": "Un esqueleto",
+      "price": "4999",
+      "description": "Algo con forma de esqueleto",
+      "state": true,
+      "id": 10
     }
   ],
   "car": [

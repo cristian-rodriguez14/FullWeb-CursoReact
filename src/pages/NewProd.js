@@ -1,12 +1,14 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import { addNewProdAction, addNewImageAction } from "../actions/productActions";
+import {
+  createProductAction /*, uploadImage, */,
+} from "../actions/productActions";
 import { mostrarAlerta, ocultarAlertaAction } from "../actions/alertaActions";
-import {useHistory} from "react-router";
+import { useHistory } from "react-router";
+import { storage } from "../config/firebase";
 
 const NewProd = () => {
-  const [imageName, setImageName] = useState("");
   const [image, setImage] = useState("");
   const [name, setName] = useState("");
   const [price, setPrice] = useState(0);
@@ -16,23 +18,49 @@ const NewProd = () => {
   const dispatch = useDispatch();
   const history = useHistory();
 
+  // const saveImage = (productImage) => dispatch(uploadImage(productImage));
+
   const UploadImage = (e) => {
-    setImageName(e.target.files[0].name);
     setImage(e.target.files[0]);
-  }
+  };
+
+  const guardarImagen = () => {
+    const uploadTask = storage.ref(`images/Products/${image.name}`).put(image);
+    uploadTask.on(
+      "state_changed",
+      (snapshot) => {},
+      (error) => {
+        console.log(error);
+      },
+      () => {
+        storage
+          .ref("images/Products")
+          .child(image.name)
+          .getDownloadURL()
+          .then((url) => {
+            alert("Imagen Guardada exitosamente");
+            setImage(url);
+          });
+      }
+    );
+  };
+
+  /* useEffect(() => {
+    if (image !== "") {
+      saveImage({ image });
+    }
+    
+  }, [image]); */
 
   const cargando = useSelector((state) => state.products.loading);
   const error = useSelector((state) => state.products.error);
   const alerta = useSelector((state) => state.alerta.alerta);
 
-  const addProduct = (product) => dispatch(addNewProdAction(product));
-  const addImage = (image) => dispatch(addNewImageAction(image));
+  const addProduct = (product) => dispatch(createProductAction(product));
 
   const submitNew = (e) => {
     e.preventDefault();
-    if (imageName.trim() === "") {
-      setImage("Default.png");
-    }
+
     if (name.trim() === "" || price.trim() <= 0 || description.trim() === "") {
       const alerta = {
         msg: "Ambos campos son obligatorios",
@@ -43,8 +71,8 @@ const NewProd = () => {
       return;
     }
     dispatch(ocultarAlertaAction());
-    addImage({image});
-    addProduct({ imageName, name, price, description, state });
+    console.log("Ultimo paso", image);
+    addProduct({ image, name, price, description, state });
     history.push("/products");
   };
 
@@ -57,15 +85,20 @@ const NewProd = () => {
               Agregar Nuevo Producto
             </h2>
             {alerta ? <p className={alerta.classes}> {alerta.msg} </p> : null}
+            
             <form onSubmit={submitNew}>
               <div className="form-group">
-                <label htmlFor="image">Imagen del Producto</label>
+                <label htmlFor="image">Imagen del Producto</label><br/>
+                <img src={image} alt="" style={{maxHeight: "200px", maxWidth: "200px"}}/>
                 <input
                   type="file"
                   className="form-control"
                   name="image"
                   onChange={UploadImage}
                 />
+                <button onClick={guardarImagen} className="btn btn-primary">
+                  Guardar Imagen
+                </button>
               </div>
               <div className="form-group">
                 <label htmlFor="name">Nombre Producto</label>
