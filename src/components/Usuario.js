@@ -4,15 +4,15 @@ import Swal from "sweetalert2";
 import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 
-import { deleteUserAction, setUser } from "../actions/userActions";
+import { suprUserAction, fillForm } from "../actions/userActions";
 
 const Usuario = ({ user }) => {
-  const { photo, email, password, rol, state, id } = user;
+  const { photo, email, password, role, state } = user;
 
   const dispatch = useDispatch();
   const history = useHistory();
 
-  const confirmDeleteUser = (id) => {
+  const confirmDeleteUser = (user) => {
     Swal.fire({
       title: "¿Estas seguro?",
       text: "Un usuario que se elimina no se puede recuperar",
@@ -25,23 +25,24 @@ const Usuario = ({ user }) => {
     }).then((result) => {
       if (result.value) {
         // pasarlo al action
-        dispatch(deleteUserAction(id));
+        user.state = false;
+        dispatch(suprUserAction(user));
       }
     });
   };
 
   const toEdit = (user) => {
-    dispatch(setUser(user));
+    dispatch(fillForm(user));
     history.push(`/users/edit/${user.id}`);
   };
 
   return (
     <tr>
-      <td>{photo}</td>
+      <td><img src={photo} alt="" style={{maxHeight: "100px", maxWidth: "200px"}}/></td>
       <td>{email}</td>
-      <td>{password}</td>
-      <td>{rol}</td>
-      <td>{state}</td>
+      <td style={{display: "none"}}>{password}</td>
+      <td style={{display: "none"}}>{role}</td>
+      <td style={{display: "none"}}>{state}</td>
       <td className="acciones">
         <button
           type="button"
@@ -53,7 +54,7 @@ const Usuario = ({ user }) => {
         <button
           type="button"
           className="btn btn-danger"
-          onClick={() => confirmDeleteUser(id)}
+          onClick={() => confirmDeleteUser(user)}
         >
           Eliminar{" "}
         </button>

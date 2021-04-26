@@ -8,13 +8,15 @@ const AdmonProd = () => {
   const dispatch = useDispatch();
   const [paginaactual, guardarPaginaActual] = useState(1);
   const [totalpaginas, guardarTotalPaginas] = useState(5);
-  // const Message = "No hay ningun producto guardado"
+
   useEffect(() => {
+    console.log("Primer Objetivo de productos");
     const cargarProductos = () => dispatch(readProductAction());
     cargarProductos();
     // eslint-disable-next-line
   }, []);
-  const {products/* , productForm */ } = useSelector((state) => state.products);
+
+  const { products } = useSelector((state) => state.products);
   const error = useSelector((state) => state.products.error);
   const cargando = useSelector((state) => state.products.loading);
 
@@ -23,7 +25,7 @@ const AdmonProd = () => {
     const rta = products.length;
     const calcularTotalPaginas = Math.ceil(rta / imagenesPorPagina);
     guardarTotalPaginas(calcularTotalPaginas);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [products]);
 
   const paginaAnterior = () => {
@@ -65,28 +67,31 @@ const AdmonProd = () => {
             ? null // Message
             : products.map((product) => {
                 return product.state === true ? (
-                  <Producto key={product.id} product={product}/>
+                  <Producto key={product.id} product={product} />
                 ) : null;
               })}
         </tbody>
       </table>
       <div className="row justify-content-center">
+        {paginaactual === 1 ? null : (
+          <button
+            type="button"
+            className="bbtn btn-info mr-1"
+            onClick={paginaAnterior}
+          >
+            &laquo; Anterior{" "}
+          </button>
+        )}
 
-          { (paginaactual === 1) ? null : (
-            <button 
-                type="button"
-                className="bbtn btn-info mr-1"
-                onClick={paginaAnterior}
-            >&laquo; Anterior </button>
-          ) }
-
-          { (paginaactual === totalpaginas) ? null : (
-            <button 
-              type="button"
-              className="bbtn btn-info"
-              onClick={paginaSiguiente}
-            >Siguiente &raquo;</button>
-          ) }
+        {paginaactual === totalpaginas ? null : (
+          <button
+            type="button"
+            className="bbtn btn-info"
+            onClick={paginaSiguiente}
+          >
+            Siguiente &raquo;
+          </button>
+        )}
       </div>
     </>
   );

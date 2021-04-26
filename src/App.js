@@ -29,18 +29,18 @@ function App() {
         <div className="container">
           <Switch>
             <Route exact path="/"><Home /></Route>
-            <Route exact path="/About"><About/></Route>
-            <Route exact path="/Store"><Store/></Route>
-            <Route exact path="/Login"><Login/></Route>
-            <Route exact path="/Register"><Register/></Route>
-            <Route exact path="/Users"><AdmonUser/></Route>
-            <Route exact path="/Users/new"><NewUser/></Route>
-            <Route exact path="/Users/edit/:id"><UpdateUser/></Route>
+            <Route exact path="/about"><About/></Route>
+            <Route exact path="/store"><Store/></Route>
+            <Route exact path="/login"><Login/></Route>
+            <Route exact path="/register"><Register/></Route>
+            <Route exact path="/users"><AdmonUser/></Route>
+            <Route exact path="/users/new"><NewUser/></Route>
+            <Route exact path="/users/edit/:id"><UpdateUser/></Route>
             <Route exact path="/products"><AdmonProd/></Route>
             <Route exact path="/products/new"><NewProd/></Route>
             <Route exact path="/products/edit/:id"><UpdateProd/></Route>
-            <Route exact path="/ShopCar/:id"><ShopCar/></Route>
-            <Route exact path="/Drinks"><Drinks/></Route>
+            <Route exact path="/shopCar/:id"><ShopCar/></Route>
+            <Route exact path="/drinks"><Drinks/></Route>
           </Switch>
         </div>
         <Footer fecha={fecha} />

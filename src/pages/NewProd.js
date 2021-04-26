@@ -14,6 +14,7 @@ const NewProd = () => {
   const [price, setPrice] = useState(0);
   const [description, setDescription] = useState("");
   const [state, setState] = useState(true);
+  const [btnclick, setBtnclick] = useState(false);
 
   const dispatch = useDispatch();
   const history = useHistory();
@@ -26,23 +27,16 @@ const NewProd = () => {
 
   const guardarImagen = () => {
     const uploadTask = storage.ref(`images/Products/${image.name}`).put(image);
-    uploadTask.on(
-      "state_changed",
-      (snapshot) => {},
-      (error) => {
-        console.log(error);
-      },
-      () => {
-        storage
-          .ref("images/Products")
-          .child(image.name)
-          .getDownloadURL()
-          .then((url) => {
-            alert("Imagen Guardada exitosamente");
-            setImage(url);
-          });
-      }
-    );
+    uploadTask.on(() => {
+      storage
+        .ref("images/Products")
+        .child(image.name)
+        .getDownloadURL()
+        .then((url) => {
+          setImage(url);
+          setBtnclick(true);
+        });
+    });
   };
 
   /* useEffect(() => {
@@ -71,9 +65,17 @@ const NewProd = () => {
       return;
     }
     dispatch(ocultarAlertaAction());
-    console.log("Ultimo paso", image);
-    addProduct({ image, name, price, description, state });
-    history.push("/products");
+    if (btnclick === true) {
+      addProduct({ image, name, price, description, state });
+      history.push("/products");
+    } else {
+      const alerta = {
+        msg: "Por favor suba una imagen",
+        classes: "alert alert-danger text-center text-uppercase p3",
+      };
+      dispatch(mostrarAlerta(alerta));
+    }
+    dispatch(ocultarAlertaAction());
   };
 
   return (
@@ -85,11 +87,16 @@ const NewProd = () => {
               Agregar Nuevo Producto
             </h2>
             {alerta ? <p className={alerta.classes}> {alerta.msg} </p> : null}
-            
+            <img
+              src={image}
+              alt=""
+              style={{ maxHeight: "200px", maxWidth: "200px" }}
+            />
             <form onSubmit={submitNew}>
               <div className="form-group">
-                <label htmlFor="image">Imagen del Producto</label><br/>
-                <img src={image} alt="" style={{maxHeight: "200px", maxWidth: "200px"}}/>
+                <label htmlFor="image">Imagen del Producto</label>
+                <br />
+
                 <input
                   type="file"
                   className="form-control"

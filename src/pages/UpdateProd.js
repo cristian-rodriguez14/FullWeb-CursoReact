@@ -15,7 +15,7 @@ const UpdateProd = () => {
     description: "",
     state: "",
   });
-  const [img, setimg] = useState("")
+  const [img, setimg] = useState("");
 
   const editproduct = useSelector((state) => state.products.productoeditar);
 
@@ -48,9 +48,8 @@ const UpdateProd = () => {
     );
   };
 
-  
   const onChange = (e) => {
-    product.image=img
+    product.image = img;
     setProduct({
       ...product,
       [e.target.name]: e.target.value,
@@ -76,12 +75,17 @@ const UpdateProd = () => {
               Editar Producto
             </h2>
             <button onClick={guardarImagen} className="btn btn-primary">
-                  Guardar Imagen
-                </button>
+              Guardar Imagen
+            </button>
             <form onSubmit={onSubmit}>
               <div className="form-group">
-                <label htmlFor="img">Imagen del Producto</label><br />
-                <img src={image} alt="" style={{maxHeight: "200px", maxWidth: "200px"}}/>
+                <label htmlFor="img">Imagen del Producto</label>
+                <br />
+                <img
+                  src={image}
+                  alt=""
+                  style={{ maxHeight: "200px", maxWidth: "200px" }}
+                />
                 <input
                   type="file"
                   className="form-control"

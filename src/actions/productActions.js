@@ -1,24 +1,24 @@
 import {
   CREATE_PRODUCT,
-  CREATE_PRODUCT_SUCCESS,
+  // CREATE_PRODUCT_SUCCESS,
   CREATE_PRODUCT_ERROR,
   READ_PRODUCT,
-  READ_PRODUCT_SUCCESS,
+  // READ_PRODUCT_SUCCESS,
   READ_PRODUCT_ERROR,
   // DELETE_PRODUCT,
   DELETE_PRODUCT_SUCCESS,
   DELETE_PRODUCT_ERROR,
   SET_UPDATE_PRODUCT,
-  UPDATE_PRODUCT,
+  // UPDATE_PRODUCT,
   UPDATE_PRODUCT_SUCCESS,
   UPDATE_PRODUCT_ERROR,
 } from "../types";
-import clienteAxios from "../config/axios";
+// import clienteAxios from "../config/axios";
 import { db } from "../config/firebase";
 import Swal from "sweetalert2";
 
 // C
-export function addNewProdAction(product) {
+/* export function addNewProdAction(product) {
   return async (dispatch) => {
     dispatch(addProduct());
     try {
@@ -44,15 +44,15 @@ const addProduct = () => ({
 const addProductSuccess = (product) => ({
   type: CREATE_PRODUCT_SUCCESS,
   payload: product,
-});
+});*/
 
 const addProductError = (estado) => ({
   type: CREATE_PRODUCT_ERROR,
   payload: estado,
-});
+}); 
 
-// R
-export function getProdAction() {
+// R/*  */
+/* export function getProdAction() {
   return async (dispatch) => {
     dispatch(getProducts());
 
@@ -73,14 +73,14 @@ const getProducts = () => ({
 const getProductsSuccess = (products) => ({
   type: READ_PRODUCT_SUCCESS,
   payload: products,
-});
+});*/
 const getProductsError = () => ({
   type: READ_PRODUCT_ERROR,
   payload: true,
-});
+}); 
 
 // U
-export function setProduct(product) {
+/* export function setProduct(product) {
   return (dispatch) => {
     dispatch(setProductAction(product));
   };
@@ -110,28 +110,24 @@ const editProduct = () => ({
 const editProductSuccess = (product) => ({
   type: UPDATE_PRODUCT_SUCCESS,
   payload: product,
-});
+});*/
 
 const editProductError = () => ({
   type: UPDATE_PRODUCT_ERROR,
   payload: true,
-});
+}); 
 
 // D
 // export function deleteProductAction(id) {
-export function deleteProductAction(product) {
+/* export function deleteProductAction(product) {
   return async (dispatch) => {
-    // dispatch(getDeleteProduct(id));
     dispatch(getDeleteProduct());
 
     try {
-      //await clienteAxios.delete(`/products/${id}`);
       await clienteAxios.put(`/products/${product.id}`, product);
-      //dispatch(deleteProductSuccess());
       dispatch(deleteProductSuccess(product));
       Swal.fire("Eliminado", "El producto se eliminó correctamente", "success");
     } catch (error) {
-      // dispatch(deleteProductError());
       dispatch(deleteProductError());
     }
   };
@@ -144,12 +140,12 @@ const getDeleteProduct = () => ({
 const deleteProductSuccess = (product) => ({
   type: DELETE_PRODUCT_SUCCESS,
   payload: product,
-});
+});*/
 
 const deleteProductError = () => ({
   type: DELETE_PRODUCT_ERROR,
   payload: true,
-});
+}); 
 
 // Firebase CRUD
 /* export function uploadImage(productImage) {

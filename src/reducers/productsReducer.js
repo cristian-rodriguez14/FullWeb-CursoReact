@@ -1,11 +1,11 @@
 import {
   CREATE_PRODUCT,
-  CREATE_PRODUCT_SUCCESS,
+  // CREATE_PRODUCT_SUCCESS,
   CREATE_PRODUCT_ERROR,
   READ_PRODUCT,
-  READ_PRODUCT_SUCCESS,
+  // READ_PRODUCT_SUCCESS,
   READ_PRODUCT_ERROR,
-  DELETE_PRODUCT,
+  // DELETE_PRODUCT,
   DELETE_PRODUCT_SUCCESS,
   DELETE_PRODUCT_ERROR,
   SET_UPDATE_PRODUCT,
@@ -16,13 +16,13 @@ import {
 const initialState = {
   products: [],
   imagen: "",
-  productForm: {
+  /* productForm: {
     image: "",
     name: "",
     price: "",
     description: "",
     state: "",
-  },
+  }, */
   error: null,  
   loading: false,
   productoeliminar: null,
@@ -40,31 +40,31 @@ export default function (state = initialState, action) {
     case CREATE_PRODUCT:
       return {
         ...state,
-        productForm: {
+        /* productForm: {
           image: "",
           name: "",
           price: "",
           description: "",
           state: "",
-        },
+        }, */
       };
-    case DELETE_PRODUCT:
+    /* case DELETE_PRODUCT:
       return {
         ...state,
         productoeditar: action.payload,
-      };
+      }; */
     /* case READ_PRODUCT:
     case CREATE_PRODUCT:
       return {
         ...state,
         loading: action.payload,
       }; */
-    case CREATE_PRODUCT_SUCCESS:
+    /* case CREATE_PRODUCT_SUCCESS:
       return {
         ...state,
         loading: false,
         products: [...state.products, action.payload],
-      };
+      }; */
     case CREATE_PRODUCT_ERROR:
     case READ_PRODUCT_ERROR:
     case DELETE_PRODUCT_ERROR:
@@ -74,13 +74,13 @@ export default function (state = initialState, action) {
         loading: false,
         error: action.payload,
       };
-    case READ_PRODUCT_SUCCESS:
+    /* case READ_PRODUCT_SUCCESS:
       return {
         ...state,
         loading: false,
         error: null,
         products: action.payload,
-      };
+      }; */
     /* case DELETE_PRODUCT:
       return {
         ...state,

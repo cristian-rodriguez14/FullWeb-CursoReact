@@ -54,6 +54,7 @@ export const DELETE_CAR_ERROR = "DELETE_CAR_ERROR";
 
 // Otros
 export const LOGIN = "LOGIN";
+export const USER_LOGIN = "USER_LOGIN";
 export const LOGIN_SUCCESS = "LOGIN_SUCCESS";
 export const LOGIN_ERROR = "LOGIN_ERROR";
 

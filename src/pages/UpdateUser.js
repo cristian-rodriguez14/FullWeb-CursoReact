@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { editUserAction } from "../actions/userActions";
+import { updateUserAction } from "../actions/userActions";
 import { useHistory } from "react-router-dom";
+import { storage } from "../config/firebase";
 
 const UpdateUser = () => {
   const history = useHistory();
@@ -11,31 +12,59 @@ const UpdateUser = () => {
     photo: "",
     email: "",
     password: "",
-    rol: "user",
+    role: "user",
     state: true,
   });
 
-  const edituser = useSelector((state) => state.users.edituser);
+  const [image, setImage] = useState("")
+
+  const edituser = useSelector((state) => state.users.usuarioeditar);
 
   useEffect(() => {
     setUser(edituser);
   }, [edituser]);
 
+  const UploadImage = (e) => {
+    setImage(e.target.files[0]);
+  };
+
+  const guardarImagen = () => {
+    const uploadTask = storage.ref(`images/Products/${image.name}`).put(image);
+    uploadTask.on(
+      "state_changed",
+      (snapshot) => {},
+      (error) => {
+        console.log(error);
+      },
+      () => {
+        storage
+          .ref("images/Products")
+          .child(image.name)
+          .getDownloadURL()
+          .then((url) => {
+            alert("Imagen Guardada exitosamente");
+            setImage(url);
+          });
+      }
+    );
+  };
+
   const onChange = (e) => {
+    user.photo = image;
     setUser({
       ...user,
       [e.target.name]: e.target.value,
     });
   };
 
-  const { photo, email, rol, state } = user;
+  const { photo, email, password, role, state } = user;
 
   const onSubmit = (e) => {
     e.preventDefault();
+    user.photo = image;
+    dispatch(updateUserAction(user));
 
-    dispatch(editUserAction(user));
-
-    history.push("/");
+    history.push("/users");
   };
 
   return (
@@ -46,35 +75,48 @@ const UpdateUser = () => {
             <h2 className="text-center mb-4 font-weight-bold">
               Editar Usuario
             </h2>
+            <button onClick={guardarImagen} className="btn btn-primary">
+              Guardar Imagen
+            </button>
             <form onSubmit={onSubmit}>
               <div className="form-group">
-                <label htmlFor="photo">Imagen del Usuario</label>
+                <label htmlFor="photo">Imagen del Usuario</label><br />
+                <img
+                  src={photo}
+                  alt=""
+                  style={{ maxHeight: "200px", maxWidth: "200px" }}
+                />
                 <input
                   type="file"
                   className="form-control"
                   name="photo"
-                  value={photo}
-                  onChange={onChange}
+                  onChange={UploadImage}
                 />
               </div>
               <div className="form-group">
-                <label htmlFor="email">Email</label>
                 <input
-                  type="email"
+                  type="hidden"
                   className="form-control"
-                  placeholder="Email"
                   name="email"
                   value={email}
                   onChange={onChange}
                 />
               </div>
               <div className="form-group">
-                <label htmlFor="rol">rol</label>
                 <input
                   type="hidden"
                   className="form-control"
-                  name="rol"
-                  value={rol}
+                  name="password"
+                  value={password}
+                  onChange={onChange}
+                />
+              </div>
+              <div className="form-group">
+                <input
+                  type="hidden"
+                  className="form-control"
+                  name="role"
+                  value={role}
                   onChange={onChange}
                 />
               </div>
