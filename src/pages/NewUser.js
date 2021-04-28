@@ -1,62 +1,65 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import { createUserAction } from "../actions/userActions";
+import { createUserAction, uploadImage, readUserAction } from "../actions/userActions";
 import { mostrarAlerta, ocultarAlertaAction } from "../actions/alertaActions";
 import { useHistory } from "react-router";
-import { storage } from "../config/firebase";
-// import { auth } from "../config/firebase";
+
+import Swal from "sweetalert2";
 
 const NewUser = () => {
   const [photo, setPhoto] = useState("");
+  const [urlPhoto, setUrlPhoto] = useState("https://firebasestorage.googleapis.com/v0/b/fullweb-reactcourse.appspot.com/o/images%2FUsers%2FDefault.png?alt=media&token=f77bd04f-3218-4756-bc7b-8255a8287496");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState(0);
-  const [role, setRole] = useState("User");
-  const [state, setState] = useState(true);
+  const [role] = useState("User");
+  const [state] = useState(true);
   const [confirmar, setConfirmar] = useState(0);
   const [btnclick, setBtnclick] = useState(false);
 
   const dispatch = useDispatch();
   const history = useHistory();
 
+  const saveImage = (userImage) => dispatch(uploadImage(userImage));
+
   const UploadImage = (e) => {
     setPhoto(e.target.files[0]);
   };
 
   const guardarImagen = () => {
-    const uploadTask = storage.ref(`images/Users/${photo.name}`).put(photo);
-    uploadTask.on(() => {
-      storage
-        .ref("images/Users")
-        .child(photo.name)
-        .getDownloadURL()
-        .then((url) => {
-          setPhoto(url);
-          setBtnclick(true);
-          const alerta = {
-            msg: "Imagen Subida exitosamente",
-            classes: "alert alert-success text-center text-uppercase p3",
-          };
-          dispatch(mostrarAlerta(alerta));
-        });
-    });
+    saveImage({ photo });
+    setBtnclick(true);
+    setPhoto()
   };
 
   const cargando = useSelector((state) => state.users.loading);
   const error = useSelector((state) => state.users.error);
   const alerta = useSelector((state) => state.alerta.alerta);
+  const url = useSelector((state) => state.users.url);
+  const { users } = useSelector((state) => state.users);
+  useEffect(() => {
+    const cargarUsuarios = () => dispatch(readUserAction());
+    cargarUsuarios();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    if(url!==null){
+      setUrlPhoto(url)
+    }
+  }, [url]);
 
   const addUser = (user) => dispatch(createUserAction(user));
 
-  const submitNew = (e) => {
-    dispatch(ocultarAlertaAction());
+  const submitNew = (e) => {   
     e.preventDefault();
-
+    const resultado = users.find((emailuser) => emailuser.email === email);
+    
     if (email.trim() === "" || password.trim() === "") {
       const alerta = {
         msg: "Ambos campos son obligatorios",
         classes: "alert alert-danger text-center text-uppercase p3",
-      } 
+      };
       dispatch(mostrarAlerta(alerta));
 
       return;
@@ -64,7 +67,7 @@ const NewUser = () => {
       const alerta = {
         msg: "Contraseña es muy corta. Minimo 6 caracteres",
         classes: "alert alert-danger text-center text-uppercase p3",
-      } 
+      };
       dispatch(mostrarAlerta(alerta));
 
       return;
@@ -72,24 +75,40 @@ const NewUser = () => {
       const alerta = {
         msg: "Contraseñas no coinciden",
         classes: "alert alert-danger text-center text-uppercase p3",
-      } 
+      };
+      dispatch(mostrarAlerta(alerta));
+
+      return;
+    } else if (typeof resultado !== "undefined") {
+      const alerta = {
+        msg: "El usuario ya existe",
+        classes: "alert alert-danger text-center text-uppercase p3",
+      };
       dispatch(mostrarAlerta(alerta));
 
       return;
     }
     dispatch(ocultarAlertaAction());
-    if (btnclick === true) {
-      addUser({ photo, email, password, role, state });
+    if (btnclick === true) {      
+      addUser({ urlPhoto, email, password, role, state });      
       history.push("/users");
-      return;
     } else {
-      const alerta = {
-        msg: "Por favor suba una imagen",
-        classes: "alert alert-danger text-center text-uppercase p3",
-      };
-      dispatch(mostrarAlerta(alerta));
+      Swal.fire({
+        title: "¿Estas seguro?",
+        text: "Se recomienda guardar una imagen del usuario",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Si",
+        cancelButtonText: "Cancelar",
+      }).then((result) => {
+        if (result.value) {
+          addUser({ urlPhoto, email, password, role, state });          
+          history.push("/users");
+        }
+      });
     }
-    dispatch(ocultarAlertaAction());
   };
 
   return (
@@ -100,25 +119,24 @@ const NewUser = () => {
             <h2 className="text-center mb-4 font-weight-bold">
               Agregar Nuevo Usuario
             </h2>
-            {alerta ? <p className={alerta.classes}> {alerta.msg} </p> : null}
-            <img
-              src={photo}
+            {alerta ? <p className={alerta.classes}> {alerta.msg} </p> : null}            
+            <button onClick={guardarImagen} className="btn btn-primary">
+                  Guardar Imagen
+                </button>
+            <form onSubmit={submitNew}>
+              <div className="form-group">
+                <label htmlFor="photo">Imagen del Usuario</label><br />
+                <img
+              src={urlPhoto}
               alt=""
               style={{ maxHeight: "200px", maxWidth: "200px" }}
             />
-            <form onSubmit={submitNew}>
-              <div className="form-group">
-                <label htmlFor="photo">Imagen del Usuario</label>
-
                 <input
                   type="file"
                   className="form-control"
                   name="photo"
                   onChange={UploadImage}
-                />
-                <button onClick={guardarImagen} className="btn btn-primary">
-                  Guardar Imagen
-                </button>
+                />                
               </div>
               <div className="form-group">
                 <label htmlFor="email">Nombre Usuario</label>
@@ -151,24 +169,6 @@ const NewUser = () => {
                   name="confirmar"
                   value={confirmar}
                   onChange={(e) => setConfirmar(e.target.value)}
-                />
-              </div>
-              <div className="form-group">
-                <input
-                  type="hidden"
-                  className="form-control"
-                  name="role"
-                  value={role}
-                  onChange={(e) => setRole(e.target.value)}
-                />
-              </div>
-              <div className="form-group">
-                <input
-                  type="hidden"
-                  className="form-control"
-                  name="state"
-                  value={state}
-                  onChange={(e) => setState(e.target.value)}
                 />
               </div>
               <button

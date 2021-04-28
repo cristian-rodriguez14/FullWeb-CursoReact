@@ -2,6 +2,7 @@ import {
   CREATE_PRODUCT,
   // CREATE_PRODUCT_SUCCESS,
   CREATE_PRODUCT_ERROR,
+  RECEIVE_IMAGE,
   READ_PRODUCT,
   // READ_PRODUCT_SUCCESS,
   READ_PRODUCT_ERROR,
@@ -15,14 +16,6 @@ import {
 
 const initialState = {
   products: [],
-  imagen: "",
-  /* productForm: {
-    image: "",
-    name: "",
-    price: "",
-    description: "",
-    state: "",
-  }, */
   error: null,  
   loading: false,
   productoeliminar: null,
@@ -99,6 +92,11 @@ export default function (state = initialState, action) {
       return {
         ...state,
         productoeditar: action.payload,
+      };
+    case RECEIVE_IMAGE:
+      return {
+        ...state,
+        imagen: action.payload,
       };
     case UPDATE_PRODUCT_SUCCESS:
     case DELETE_PRODUCT_SUCCESS:

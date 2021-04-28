@@ -1,50 +1,41 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import {
-  createProductAction /*, uploadImage, */,
-} from "../actions/productActions";
+import { createProductAction } from "../actions/productActions";
 import { mostrarAlerta, ocultarAlertaAction } from "../actions/alertaActions";
 import { useHistory } from "react-router";
+import Swal from "sweetalert2";
 import { storage } from "../config/firebase";
 
 const NewProd = () => {
   const [image, setImage] = useState("");
+  const [imageTwo, setImageTwo] = useState("https://firebasestorage.googleapis.com/v0/b/fullweb-reactcourse.appspot.com/o/images%2FProducts%2FDefault.png?alt=media&token=dc4ec512-f039-4821-9b7b-91cf522fe7c1");
   const [name, setName] = useState("");
   const [price, setPrice] = useState(0);
   const [description, setDescription] = useState("");
-  const [state, setState] = useState(true);
+  const [state] = useState(true);
   const [btnclick, setBtnclick] = useState(false);
 
   const dispatch = useDispatch();
   const history = useHistory();
-
-  // const saveImage = (productImage) => dispatch(uploadImage(productImage));
 
   const UploadImage = (e) => {
     setImage(e.target.files[0]);
   };
 
   const guardarImagen = () => {
-    const uploadTask = storage.ref(`images/Products/${image.name}`).put(image);
+    const uploadTask = storage.ref(`images/Users/${image.name}`).put(image);
     uploadTask.on(() => {
       storage
-        .ref("images/Products")
+        .ref("images/Users")
         .child(image.name)
         .getDownloadURL()
         .then((url) => {
-          setImage(url);
+          setImageTwo(url);
           setBtnclick(true);
         });
     });
   };
-
-  /* useEffect(() => {
-    if (image !== "") {
-      saveImage({ image });
-    }
-    
-  }, [image]); */
 
   const cargando = useSelector((state) => state.products.loading);
   const error = useSelector((state) => state.products.error);
@@ -66,16 +57,25 @@ const NewProd = () => {
     }
     dispatch(ocultarAlertaAction());
     if (btnclick === true) {
-      addProduct({ image, name, price, description, state });
+      addProduct({ imageTwo, name, price, description, state });
       history.push("/products");
     } else {
-      const alerta = {
-        msg: "Por favor suba una imagen",
-        classes: "alert alert-danger text-center text-uppercase p3",
-      };
-      dispatch(mostrarAlerta(alerta));
+      Swal.fire({
+        title: "¿Estas seguro?",
+        text: "Se recomienda guardar una imagen del producto",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Si",
+        cancelButtonText: "Cancelar",
+      }).then((result) => {
+        if (result.value) {
+          addProduct({ imageTwo, name, price, description, state });
+          history.push("/products");
+        }
+      });
     }
-    dispatch(ocultarAlertaAction());
   };
 
   return (
@@ -137,15 +137,6 @@ const NewProd = () => {
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
                 ></textarea>
-              </div>
-              <div className="form-group">
-                <input
-                  type="hidden"
-                  className="form-control"
-                  name="state"
-                  value={state}
-                  onChange={(e) => setState(e.target.value)}
-                />
               </div>
               <button
                 type="submit"

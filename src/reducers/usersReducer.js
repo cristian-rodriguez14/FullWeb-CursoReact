@@ -1,6 +1,7 @@
 import {
   REGISTER,
   REGISTER_ERROR,
+  RECEIVE_PHOTO,
   READ_USER,
   READ_USER_ERROR,
   DELETE_USER_SUCCESS,
@@ -16,6 +17,7 @@ import {
 const initialState = {
   users: [],
   log: null,
+  url: null,
   error: null,
   loading: false,
   usuarioeliminar: null,
@@ -30,6 +32,11 @@ export default function (state = initialState, action) {
       return {
         ...state,
         users: action.payload,
+      };
+    case RECEIVE_PHOTO:
+      return {
+        ...state,
+        url: action.payload
       };
     case USER_LOGIN:
       return {

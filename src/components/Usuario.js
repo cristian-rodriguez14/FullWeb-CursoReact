@@ -7,8 +7,6 @@ import { useHistory } from "react-router-dom";
 import { suprUserAction, fillForm } from "../actions/userActions";
 
 const Usuario = ({ user }) => {
-  const { photo, email, password, role, state } = user;
-
   const dispatch = useDispatch();
   const history = useHistory();
 
@@ -38,11 +36,8 @@ const Usuario = ({ user }) => {
 
   return (
     <tr>
-      <td><img src={photo} alt="" style={{maxHeight: "100px", maxWidth: "200px"}}/></td>
-      <td>{email}</td>
-      <td style={{display: "none"}}>{password}</td>
-      <td style={{display: "none"}}>{role}</td>
-      <td style={{display: "none"}}>{state}</td>
+      <td><img src={user.photo} alt="" style={{maxHeight: "100px", maxWidth: "200px"}}/></td>
+      <td>{user.email}</td>
       <td className="acciones">
         <button
           type="button"

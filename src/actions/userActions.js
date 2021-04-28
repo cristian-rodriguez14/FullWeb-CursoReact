@@ -1,6 +1,8 @@
 import {
   REGISTER,
   REGISTER_ERROR,
+  RECEIVE_PHOTO,
+  CLEAR_PHOTO,
   READ_USER,
   READ_USER_ERROR,
   DELETE_USER_SUCCESS,
@@ -13,7 +15,9 @@ import {
   LOGIN_ERROR,
 } from "../types";
 import Swal from "sweetalert2";
+import { fb } from "../config/firebase";
 import { db } from "../config/firebase";
+import { storage } from "../config/firebase";
 import { auth } from "../config/firebase";
 
 const addUserError = (estado) => ({
@@ -36,12 +40,37 @@ const deleteUserError = () => ({
   payload: true,
 });
 
+export function uploadImage(userImage) {
+  return async (dispatch) => {
+    try {
+      storage.ref(`images/Users/${userImage.photo.name}`).put(userImage.photo);
+    alert("imagen guardada");
+    setTimeout(() => {
+      storage
+        .ref(`images/Users/${userImage.photo.name}`)
+        .getDownloadURL()
+        .then((url) => {
+          dispatch(sendPhoto(url));
+        });
+    }, 3000);
+      
+    } catch (error) {}
+  };
+}
+
+const sendPhoto = (url) => ({
+  type: RECEIVE_PHOTO,
+  payload: url,
+});
+
 // Create in Firestore
 export function createUserAction(user) {
   return async (dispatch) => {
     try {
+      const usuarioparadb = [user.photo, user.email, user.role, user.state];
       await auth.createUserWithEmailAndPassword(user.email, user.password);
-      await db.collection("users").doc().set(user);
+      console.log("Ahora estas aqui");
+      registerInFirestore(usuarioparadb);
       dispatch(createUserSuccess(user));
       Swal.fire("Correcto", "El usuario se agregó correctamente", "success");
     } catch (error) {
@@ -58,6 +87,14 @@ export function createUserAction(user) {
 const createUserSuccess = () => ({
   type: REGISTER,
 });
+
+const registerInFirestore = (usuario) => {
+  return async () => {
+    console.log("usuario a ingresar", usuario);
+    await db.collection("users").doc().set(usuario);
+    console.log("Finalizando");
+  };
+}
 
 // Read
 export function readUserAction() {
@@ -136,7 +173,7 @@ export function LoginUserAction(user) {
       await auth
         .signInWithEmailAndPassword(user.email, user.password)
         .then((u) => {
-          dispatch(UserLoginError(u.user.email));
+          dispatch(UserLogin(u.user.email));
         });
       Swal.fire(
         "Correcto",
@@ -149,23 +186,51 @@ export function LoginUserAction(user) {
   };
 }
 
-const UserLoginError = (user) => ({
+const UserLogin = (user) => ({
   type: USER_LOGIN,
   payload: user,
 });
 
-export function GoogleLoginAction(user) {
+export function GoogleLoginAction(data) {
   return async (dispatch) => {
     try {
+      console.log("Si entro: ", data);
+      const usuarioGoogleparadb = [data.imageUrl, data.email, "user", true];
+      const Googleprovider = {
+        googleProvider: new fb.auth.GoogleAuthProvider(),
+      };
+      console.log("Usuario: ", usuarioGoogleparadb);
+      auth.signInWithPopup(Googleprovider).then((result) => {
+        dispatch(UserLogin(result));
+        console.log("Login by Google", result);
+      });
+      registerInFirestore(usuarioGoogleparadb);
     } catch (error) {
       dispatch(getUsersError());
     }
   };
 }
 
-export function FacebookLoginAction(user) {
+export function FacebookLoginAction(data) {
   return async (dispatch) => {
     try {
+      console.log("Si entro: ", data);
+      const usuarioFacebookparadb = [
+        data.picture.data.url,
+        data.email,
+        "user",
+        true,
+      ];
+      console.log("Usuario: ", usuarioFacebookparadb);
+      const Facebookprovider = {
+        facebookProvider: new fb.auth.FacebookAuthProvider(),
+      };
+      console.log("Algo pasó?");
+      auth.signInWithPopup(Facebookprovider).then((result) => {
+        console.log("Exito");
+        dispatch(UserLogin(result));
+      });
+      registerInFirestore(usuarioFacebookparadb);
     } catch (error) {
       dispatch(getUsersError());
     }
@@ -197,8 +262,9 @@ const NotLogUserData = () => ({
   payload: false,
 });
 
-export function LogoutUserAction(user) {
-  return async () => {
+export function LogoutUserAction() {
+  return async (dispatch) => {
     await auth.signOut();
+    dispatch(UserLogin(null));
   };
 }

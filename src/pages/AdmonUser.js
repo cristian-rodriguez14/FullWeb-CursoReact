@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
 
 import { useSelector, useDispatch } from "react-redux";
-import { readUserAction } from "../actions/userActions";
+import { readUserAction, authListener } from "../actions/userActions";
 
 import Usuario from "../components/Usuario";
 
 const AdmonUser = () => {
   const dispatch = useDispatch();
+  const [userLog, setUserLog] = useState(null)
   const [paginaactual, guardarPaginaActual] = useState(1);
   const [totalpaginas, guardarTotalPaginas] = useState(5);
 
@@ -19,6 +20,14 @@ const AdmonUser = () => {
   const { users } = useSelector((state) => state.users);
   const error = useSelector((state) => state.users.error);
   const cargando = useSelector((state) => state.users.loading);
+  const Iniciado = useSelector((state) => state.users.log);
+
+  useEffect(() => {
+    const UsuarioIniciado = () => dispatch(authListener());
+    UsuarioIniciado();
+    setUserLog(Iniciado)
+    // eslint-disable-next-line
+  }, [userLog]);
 
   useEffect(() => {
     const imagenesPorPagina = 5;
