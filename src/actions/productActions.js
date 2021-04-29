@@ -1,20 +1,22 @@
 import {
   CREATE_PRODUCT,
-  // CREATE_PRODUCT_SUCCESS,
   CREATE_PRODUCT_ERROR,
+  RECEIVE_IMAGE,
   READ_PRODUCT,
-  // READ_PRODUCT_SUCCESS,
   READ_PRODUCT_ERROR,
-  // DELETE_PRODUCT,
   DELETE_PRODUCT_SUCCESS,
   DELETE_PRODUCT_ERROR,
   SET_UPDATE_PRODUCT,
-  // UPDATE_PRODUCT,
   UPDATE_PRODUCT_SUCCESS,
   UPDATE_PRODUCT_ERROR,
+  LOGIN_SUCCESS,
+  LOGIN_ERROR,
 } from "../types";
-// import clienteAxios from "../config/axios";
+
 import { db } from "../config/firebase";
+import { auth } from "../config/firebase";
+import { storage } from "../config/firebase";
+
 import Swal from "sweetalert2";
 
 const addProductError = (estado) => ({
@@ -38,6 +40,36 @@ const deleteProductError = () => ({
 }); 
 
 // Firebase CRUD
+export function uploadImage(productImage) {
+  return async (dispatch) => {
+    try {
+      const uploadTask = storage
+        .ref(`images/Users/${productImage.image.name}`)
+        .put(productImage.image);
+      alert(`imagen guardada: ${productImage.image.name}`);
+      uploadTask.on(
+        "state_changed",
+        (snapShot) => {},
+        (err) => {
+          console.log(err);
+        },
+        () => {
+          storage
+            .ref(`images/Users/${productImage.image.name}`)
+            .getDownloadURL()
+            .then((url) => {
+              dispatch(sendPhoto(url));
+            });
+        }
+      );
+    } catch (error) {}
+  };
+}
+
+const sendPhoto = (url) => ({
+  type: RECEIVE_IMAGE,
+  payload: url,
+});
 
 // Create in Firestore
 export function createProductAction(product) {
@@ -129,4 +161,29 @@ export function suprProductAction(product) {
 const suprProductSuccess = (product) => ({
   type: DELETE_PRODUCT_SUCCESS,
   payload: product,
+});
+
+export function authListener() {
+  return (dispatch) => {
+    //Compruebo si el usuario se ha loggeado
+    auth.onAuthStateChanged((user) => {
+      if (user) {
+        //Usuario loggeado
+        dispatch(LogUserData(user));
+      } else {
+        //Usuario NO logueado
+        dispatch(NotLogUserData());
+      }
+    });
+  };
+}
+
+const LogUserData = (user) => ({
+  type: LOGIN_SUCCESS,
+  payload: user,
+});
+
+const NotLogUserData = () => ({
+  type: LOGIN_ERROR,
+  payload: false,
 });

@@ -1,15 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { updateUserAction } from "../actions/userActions";
+import { updateUserAction, uploadImage } from "../actions/userActions";
 import { useHistory } from "react-router-dom";
-import { storage } from "../config/firebase";
 
 const UpdateUser = () => {
   const history = useHistory();
   const dispatch = useDispatch();
 
   const [user, setUser] = useState({
-    photo: "",
+    urlPhoto: "",
     email: "",
     password: "",
     role: "user",
@@ -19,6 +18,8 @@ const UpdateUser = () => {
   const [image, setImage] = useState("")
 
   const edituser = useSelector((state) => state.users.usuarioeditar);
+  const saveImage = (userImage) => dispatch(uploadImage(userImage));
+  const url = useSelector((state) => state.users.url);
 
   useEffect(() => {
     setUser(edituser);
@@ -29,41 +30,29 @@ const UpdateUser = () => {
   };
 
   const guardarImagen = () => {
-    const uploadTask = storage.ref(`images/Products/${image.name}`).put(image);
-    uploadTask.on(
-      "state_changed",
-      (snapshot) => {},
-      (error) => {
-        console.log(error);
-      },
-      () => {
-        storage
-          .ref("images/Products")
-          .child(image.name)
-          .getDownloadURL()
-          .then((url) => {
-            alert("Imagen Guardada exitosamente");
-            setImage(url);
-          });
-      }
-    );
+    saveImage({ image });
   };
 
+  useEffect(() => {
+    if(url!==null){
+      user.urlPhoto = url
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [url]);
+
   const onChange = (e) => {
-    user.photo = image;
+    
     setUser({
       ...user,
       [e.target.name]: e.target.value,
     });
   };
 
-  const { photo, email, password, role, state } = user;
+  const { urlPhoto, email, password, role, state } = user;
 
   const onSubmit = (e) => {
     e.preventDefault();
-    user.photo = image;
     dispatch(updateUserAction(user));
-
     history.push("/users");
   };
 
@@ -82,7 +71,7 @@ const UpdateUser = () => {
               <div className="form-group">
                 <label htmlFor="photo">Imagen del Usuario</label><br />
                 <img
-                  src={photo}
+                  src={urlPhoto}
                   alt=""
                   style={{ maxHeight: "200px", maxWidth: "200px" }}
                 />

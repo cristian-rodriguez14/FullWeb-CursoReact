@@ -1,15 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { updateProductAction } from "../actions/productActions";
+import { updateProductAction, uploadImage } from "../actions/productActions";
 import { useHistory } from "react-router-dom";
-import { storage } from "../config/firebase";
 
 const UpdateProd = () => {
   const history = useHistory();
   const dispatch = useDispatch();
 
   const [product, setProduct] = useState({
-    image: "",
+    imageTwo: "",
     name: "",
     price: "",
     description: "",
@@ -18,6 +17,8 @@ const UpdateProd = () => {
   const [img, setimg] = useState("");
 
   const editproduct = useSelector((state) => state.products.productoeditar);
+  const url = useSelector((state) => state.products.url);
+  const saveImage = (productImage) => dispatch(uploadImage(productImage));
 
   useEffect(() => {
     setProduct(editproduct);
@@ -28,41 +29,28 @@ const UpdateProd = () => {
   };
 
   const guardarImagen = () => {
-    const uploadTask = storage.ref(`images/Products/${img.name}`).put(img);
-    uploadTask.on(
-      "state_changed",
-      (snapshot) => {},
-      (error) => {
-        console.log(error);
-      },
-      () => {
-        storage
-          .ref("images/Products")
-          .child(img.name)
-          .getDownloadURL()
-          .then((url) => {
-            alert("Imagen Guardada exitosamente");
-            setimg(url);
-          });
-      }
-    );
+    saveImage({ img });
   };
 
+  useEffect(() => {
+    if (url !== null) {
+      product.imageTwo = url;
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [url]);
+
   const onChange = (e) => {
-    product.image = img;
     setProduct({
       ...product,
       [e.target.name]: e.target.value,
     });
   };
 
-  const { image, name, price, description, state } = product;
+  const { imageTwo, name, price, description, state } = product;
 
   const onSubmit = (e) => {
     e.preventDefault();
-
     dispatch(updateProductAction(product));
-
     history.push("/products");
   };
 
@@ -82,7 +70,7 @@ const UpdateProd = () => {
                 <label htmlFor="img">Imagen del Producto</label>
                 <br />
                 <img
-                  src={image}
+                  src={imageTwo}
                   alt=""
                   style={{ maxHeight: "200px", maxWidth: "200px" }}
                 />

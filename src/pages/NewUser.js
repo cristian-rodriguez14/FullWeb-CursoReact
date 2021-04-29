@@ -29,7 +29,6 @@ const NewUser = () => {
   const guardarImagen = () => {
     saveImage({ photo });
     setBtnclick(true);
-    setPhoto()
   };
 
   const cargando = useSelector((state) => state.users.loading);
@@ -37,6 +36,7 @@ const NewUser = () => {
   const alerta = useSelector((state) => state.alerta.alerta);
   const url = useSelector((state) => state.users.url);
   const { users } = useSelector((state) => state.users);
+
   useEffect(() => {
     const cargarUsuarios = () => dispatch(readUserAction());
     cargarUsuarios();
@@ -90,7 +90,7 @@ const NewUser = () => {
     }
     dispatch(ocultarAlertaAction());
     if (btnclick === true) {      
-      addUser({ urlPhoto, email, password, role, state });      
+      addUser({ urlPhoto, email, password, role, state });
       history.push("/users");
     } else {
       Swal.fire({
@@ -104,7 +104,7 @@ const NewUser = () => {
         cancelButtonText: "Cancelar",
       }).then((result) => {
         if (result.value) {
-          addUser({ urlPhoto, email, password, role, state });          
+          addUser({ urlPhoto, email, password, role, state });
           history.push("/users");
         }
       });

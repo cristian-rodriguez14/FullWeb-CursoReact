@@ -5,7 +5,6 @@ import Home from "./pages/Home";
 import About from "./pages/About";
 import Store from "./pages/Store";
 import Login from "./pages/Login";
-import Register from "./pages/Register";
 import AdmonUser from "./pages/AdmonUser";
 import AdmonProd from "./pages/AdmonProd";
 import NewUser from "./pages/NewUser";
@@ -32,7 +31,6 @@ function App() {
             <Route exact path="/about"><About/></Route>
             <Route exact path="/store"><Store/></Route>
             <Route exact path="/login"><Login/></Route>
-            <Route exact path="/register"><Register/></Route>
             <Route exact path="/users"><AdmonUser/></Route>
             <Route exact path="/users/new"><NewUser/></Route>
             <Route exact path="/users/edit/:id"><UpdateUser/></Route>

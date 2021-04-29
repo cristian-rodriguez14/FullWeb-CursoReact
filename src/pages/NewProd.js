@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import { createProductAction } from "../actions/productActions";
+import { createProductAction, uploadImage } from "../actions/productActions";
 import { mostrarAlerta, ocultarAlertaAction } from "../actions/alertaActions";
 import { useHistory } from "react-router";
 import Swal from "sweetalert2";
@@ -19,29 +19,29 @@ const NewProd = () => {
   const dispatch = useDispatch();
   const history = useHistory();
 
+  const saveImage = (productImage) => dispatch(uploadImage(productImage));
+
   const UploadImage = (e) => {
     setImage(e.target.files[0]);
   };
 
   const guardarImagen = () => {
-    const uploadTask = storage.ref(`images/Users/${image.name}`).put(image);
-    uploadTask.on(() => {
-      storage
-        .ref("images/Users")
-        .child(image.name)
-        .getDownloadURL()
-        .then((url) => {
-          setImageTwo(url);
-          setBtnclick(true);
-        });
-    });
+    saveImage({ image });
+    setBtnclick(true);
   };
 
   const cargando = useSelector((state) => state.products.loading);
   const error = useSelector((state) => state.products.error);
   const alerta = useSelector((state) => state.alerta.alerta);
+  const url = useSelector((state) => state.products.url);
 
   const addProduct = (product) => dispatch(createProductAction(product));
+
+  useEffect(() => {
+    if(url!==null){
+      setImageTwo(url)
+    }
+  }, [url]);
 
   const submitNew = (e) => {
     e.preventDefault();

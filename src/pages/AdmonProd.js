@@ -10,7 +10,6 @@ const AdmonProd = () => {
   const [totalpaginas, guardarTotalPaginas] = useState(5);
 
   useEffect(() => {
-    console.log("Primer Objetivo de productos");
     const cargarProductos = () => dispatch(readProductAction());
     cargarProductos();
     // eslint-disable-next-line
@@ -66,9 +65,7 @@ const AdmonProd = () => {
           {products.length === 0
             ? null // Message
             : products.map((product) => {
-                return product.state === true ? (
-                  <Producto key={product.id} product={product} />
-                ) : null;
+                return <Producto key={product.id} product={product} />;
               })}
         </tbody>
       </table>

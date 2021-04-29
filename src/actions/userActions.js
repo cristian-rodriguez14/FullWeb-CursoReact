@@ -2,7 +2,6 @@ import {
   REGISTER,
   REGISTER_ERROR,
   RECEIVE_PHOTO,
-  CLEAR_PHOTO,
   READ_USER,
   READ_USER_ERROR,
   DELETE_USER_SUCCESS,
@@ -43,17 +42,25 @@ const deleteUserError = () => ({
 export function uploadImage(userImage) {
   return async (dispatch) => {
     try {
-      storage.ref(`images/Users/${userImage.photo.name}`).put(userImage.photo);
-    alert("imagen guardada");
-    setTimeout(() => {
-      storage
+      const uploadTask = storage
         .ref(`images/Users/${userImage.photo.name}`)
-        .getDownloadURL()
-        .then((url) => {
-          dispatch(sendPhoto(url));
-        });
-    }, 3000);
-      
+        .put(userImage.photo);
+      alert(`imagen guardada: ${userImage.photo.name}`);
+      uploadTask.on(
+        "state_changed",
+        (snapShot) => {},
+        (err) => {
+          console.log(err);
+        },
+        () => {
+          storage
+            .ref(`images/Users/${userImage.photo.name}`)
+            .getDownloadURL()
+            .then((url) => {
+              dispatch(sendPhoto(url));
+            });
+        }
+      );
     } catch (error) {}
   };
 }
@@ -67,9 +74,13 @@ const sendPhoto = (url) => ({
 export function createUserAction(user) {
   return async (dispatch) => {
     try {
-      const usuarioparadb = [user.photo, user.email, user.role, user.state];
+      const usuarioparadb = {
+        photo: user.urlPhoto,
+        email: user.email,
+        role: user.role,
+        state: user.state,
+      };
       await auth.createUserWithEmailAndPassword(user.email, user.password);
-      console.log("Ahora estas aqui");
       registerInFirestore(usuarioparadb);
       dispatch(createUserSuccess(user));
       Swal.fire("Correcto", "El usuario se agregó correctamente", "success");
@@ -88,13 +99,9 @@ const createUserSuccess = () => ({
   type: REGISTER,
 });
 
-const registerInFirestore = (usuario) => {
-  return async () => {
-    console.log("usuario a ingresar", usuario);
-    await db.collection("users").doc().set(usuario);
-    console.log("Finalizando");
-  };
-}
+const registerInFirestore = async (usuario) => {
+  await db.collection("users").doc().set(usuario);
+};
 
 // Read
 export function readUserAction() {
