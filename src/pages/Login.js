@@ -10,9 +10,11 @@ import {
 import { mostrarAlerta, ocultarAlertaAction } from "../actions/alertaActions";
 import { useHistory } from "react-router";
 
-import GoogleLogin from "react-google-login";
+/* import GoogleLogin from "react-google-login";
 import GoogleButton from "react-google-button";
-import FacebookLogin from "react-facebook-login";
+import FacebookLogin from "react-facebook-login"; */
+
+import { auth, Gooprovider, Faceprovider } from "../config/firebase";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -26,21 +28,26 @@ const Login = () => {
   const alerta = useSelector((state) => state.alerta.alerta);
   const { users } = useSelector((state) => state.users);
 
-  const [google, setGoogle] = useState(null);
-  const [facebook, setFacebook] = useState(null);
-
   const CustomSignIn = (user) => dispatch(LoginUserAction(user));
-  const GoogleSignIn = (data) => dispatch(GoogleLoginAction(data));
-  const FacebookSignIn = (data) => dispatch(FacebookLoginAction(data));
+  const GoogleData = (result) => dispatch(GoogleLoginAction(result));
+  const FacebookData = (result) => dispatch(FacebookLoginAction(result));
 
-  const responseGoogle = (response) => {
-    setGoogle(response.profileObj);
-    GoogleSignIn(response.profileObj);
+  const responseGoogle = () => {
+    Gooprovider.addScope("profile");
+    Gooprovider.addScope("email");
+    auth.signInWithPopup(Gooprovider).then((result) => {    
+      window.localStorage.setItem("accessToken",result.credential.accessToken)
+      GoogleData({result})
+    });
   };
 
-  const responseFacebook = (response) => {
-    setFacebook(response);
-    FacebookSignIn(response);
+  const responseFacebook = () => {
+    Faceprovider.addScope("user_birthday");
+    auth.signInWithPopup(Faceprovider).then((result) => {
+      console.log("Login by Facebook", result);
+      window.localStorage.setItem("accessToken",result.credential.accessToken)  
+      FacebookData({result})
+    });
   };
   /* useEffect(() => {
     if (google !== null || facebook !== null) {
@@ -74,6 +81,7 @@ const Login = () => {
       return;
     } else {
       dispatch(ocultarAlertaAction());
+      window.localStorage.setItem("accessToken",email)
       CustomSignIn({ email, password });
       history.push("/users");
     }
@@ -124,8 +132,8 @@ const Login = () => {
                 Hubo un error
               </p>
             ) : null}
-            <div className="row justify-content-center">
-              <GoogleLogin
+            <div className="row justify-content-center mt-2">
+              {/* <GoogleLogin
                 clientId="397592795206-dvcvhmn1kkm80794obkla0rupmcvn9qi.apps.googleusercontent.com"
                 render={(renderProps) => (
                   <GoogleButton
@@ -145,16 +153,38 @@ const Login = () => {
                 onSuccess={responseGoogle}
                 onFailure={responseGoogle}
                 cookiePolicy={"single_host_origin"}
-              />
+              /> */}
+              <button
+                onClick={responseGoogle}
+                style={{
+                  backgroundColor: "#ffffff00",
+                  color: "red",
+                  borderRadius: 5,
+                  border: "1px solid gray",
+                }}
+              >
+                Login con Google
+              </button>
             </div>
-            <div className="row justify-content-center">
-              <FacebookLogin
+            <div className="row justify-content-center mt-2">
+              {/* <FacebookLogin
                 appId="265757501925318"
                 autoLoad={false}
                 fields="email,picture"
                 onClick={responseFacebook}
                 callback={responseFacebook}
-              />
+              /> */}
+              <button
+                onClick={responseFacebook}
+                style={{
+                  backgroundColor: "#ffffff00",
+                  color: "red",
+                  borderRadius: 5,
+                  border: "1px solid gray",
+                }}
+              >
+                Login con Facebook
+              </button>
             </div>
           </div>
         </div>

@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 
 import { useSelector, useDispatch } from "react-redux";
-import { readUserAction, authListener } from "../actions/userActions";
+import { readUserAction } from "../actions/userActions";
 
 import Usuario from "../components/Usuario";
+import { auth } from "../config/firebase";
 
 const AdmonUser = () => {
   const dispatch = useDispatch();
@@ -20,13 +21,17 @@ const AdmonUser = () => {
   const { users } = useSelector((state) => state.users);
   const error = useSelector((state) => state.users.error);
   const cargando = useSelector((state) => state.users.loading);
-  const Iniciado = useSelector((state) => state.users.log);
+  // const Iniciado = useSelector((state) => state.users.log);
 
   useEffect(() => {
-    const UsuarioIniciado = () => dispatch(authListener());
-    UsuarioIniciado();
-    setUserLog(Iniciado)
-    // eslint-disable-next-line
+    if(window.localStorage.getItem("accessToken") !== null) {
+      auth.onAuthStateChanged((user) => {
+        if (user) {
+          setUserLog(user)
+        } 
+      });
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userLog]);
 
   useEffect(() => {

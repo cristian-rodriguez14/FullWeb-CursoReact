@@ -13,7 +13,10 @@ var firebaseConfig = {
   measurementId: "G-S5SVBRPEJH",
 };
 
-export const fb = firebase.initializeApp(firebaseConfig);
-export const storage = firebase.storage();
-export const auth = firebase.auth();
+const fb = firebase.initializeApp(firebaseConfig);
 export const db = fb.firestore();
+export const storage = fb.storage();
+export const auth = fb.auth();
+export const Gooprovider = new firebase.auth.GoogleAuthProvider();
+export const Faceprovider = new firebase.auth.FacebookAuthProvider();
+

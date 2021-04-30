@@ -9,15 +9,14 @@ import {
   SET_UPDATE_USER,
   UPDATE_USER_SUCCESS,
   UPDATE_USER_ERROR,
+  USER_CUSTOM_LOGIN,
   USER_LOGIN,
-  LOGIN_SUCCESS,
-  LOGIN_ERROR,
+  USER_LOGOUT,
+  /* LOGIN_SUCCESS,
+  LOGIN_ERROR, */
 } from "../types";
 import Swal from "sweetalert2";
-import { fb } from "../config/firebase";
-import { db } from "../config/firebase";
-import { storage } from "../config/firebase";
-import { auth } from "../config/firebase";
+import { db, storage, auth } from "../config/firebase";
 
 const addUserError = (estado) => ({
   type: REGISTER_ERROR,
@@ -180,7 +179,7 @@ export function LoginUserAction(user) {
       await auth
         .signInWithEmailAndPassword(user.email, user.password)
         .then((u) => {
-          dispatch(UserLogin(u.user.email));
+          dispatch(UserCustomLogin(u.user.email));
         });
       Swal.fire(
         "Correcto",
@@ -193,30 +192,75 @@ export function LoginUserAction(user) {
   };
 }
 
+const UserCustomLogin = (user) => ({
+  type: USER_CUSTOM_LOGIN,
+  payload: user,
+});
+
+export function GoogleLoginAction(result) {
+  return async (dispatch) => {
+    try {
+      const usuarioGooparadb = {
+        photo: result.result.user.photoURL,
+        email: result.result.user.email,
+        role: "User",
+        state: true,
+      };
+      dispatch(UserLogin(result));
+      registerInFirestore(usuarioGooparadb);
+    } catch (error) {
+      console.log(error);
+      dispatch(getUsersError());
+    }
+  };
+}
+
 const UserLogin = (user) => ({
   type: USER_LOGIN,
   payload: user,
 });
 
-export function GoogleLoginAction(data) {
+export function FacebookLoginAction(result) {
   return async (dispatch) => {
     try {
-      console.log("Si entro: ", data);
-      const usuarioGoogleparadb = [data.imageUrl, data.email, "user", true];
-      const Googleprovider = {
-        googleProvider: new fb.auth.GoogleAuthProvider(),
+      const usuarioFaceparadb = {
+        photo: result.result.data.picture.data.url,
+        email: result.result.data.email,
+        role: "User",
+        state: true,
       };
-      console.log("Usuario: ", usuarioGoogleparadb);
-      auth.signInWithPopup(Googleprovider).then((result) => {
-        dispatch(UserLogin(result));
-        console.log("Login by Google", result);
-      });
-      registerInFirestore(usuarioGoogleparadb);
+      dispatch(UserLogin(result));
+      registerInFirestore(usuarioFaceparadb);
     } catch (error) {
       dispatch(getUsersError());
     }
   };
 }
+
+/* export function GoogleLoginAction() {
+  return async (dispatch) => {
+    try {
+      console.log("Si entro: ", data);
+      const usuarioGoogleparadb = [data.imageUrl, data.email, "user", true];
+      Gooprovider.addScope('profile');
+      Gooprovider.addScope('email');
+      console.log("You are in the Action of Google");
+      auth.signInWithPopup(Gooprovider).then((result) => {
+        dispatch(UserLogin(result));
+        console.log("Login by Google", result);
+      });
+      // registerInFirestore(usuarioGoogleparadb);
+    } catch (error) {
+      console.log(error)
+      dispatch(getUsersError());
+    }
+  };
+}
+
+const UserLogin = (user) => ({
+  type: USER_LOGIN,
+  payload: user,
+});
 
 export function FacebookLoginAction(data) {
   return async (dispatch) => {
@@ -229,49 +273,26 @@ export function FacebookLoginAction(data) {
         true,
       ];
       console.log("Usuario: ", usuarioFacebookparadb);
-      const Facebookprovider = {
-        facebookProvider: new fb.auth.FacebookAuthProvider(),
-      };
+      Faceprovider.addScope('user_birthday');
       console.log("Algo pasó?");
-      auth.signInWithPopup(Facebookprovider).then((result) => {
-        console.log("Exito");
+      auth.signInWithPopup(Faceprovider).then((result) => {        
         dispatch(UserLogin(result));
-      });
+        console.log("Exito");
+      }); 
       registerInFirestore(usuarioFacebookparadb);
     } catch (error) {
       dispatch(getUsersError());
     }
   };
-}
-
-export function authListener() {
-  return (dispatch) => {
-    //Compruebo si el usuario se ha loggeado
-    auth.onAuthStateChanged((user) => {
-      if (user) {
-        //Usuario loggeado
-        dispatch(LogUserData(user));
-      } else {
-        //Usuario NO logueado
-        dispatch(NotLogUserData());
-      }
-    });
-  };
-}
-
-const LogUserData = (user) => ({
-  type: LOGIN_SUCCESS,
-  payload: user,
-});
-
-const NotLogUserData = () => ({
-  type: LOGIN_ERROR,
-  payload: false,
-});
+} */
 
 export function LogoutUserAction() {
   return async (dispatch) => {
     await auth.signOut();
-    dispatch(UserLogin(null));
+    dispatch(UserLogout());
   };
 }
+
+const UserLogout = () => ({
+  type: USER_LOGOUT,
+});

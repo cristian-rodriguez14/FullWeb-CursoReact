@@ -19,7 +19,6 @@ const initialState = {
   url: null,
   error: null,  
   loading: false,
-  productoeliminar: null,
   productoeditar: null,
 };
 

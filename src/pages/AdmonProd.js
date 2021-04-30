@@ -4,10 +4,13 @@ import { useSelector, useDispatch } from "react-redux";
 import { readProductAction } from "../actions/productActions";
 import Producto from "../components/Producto";
 
+import { auth } from "../config/firebase";
+
 const AdmonProd = () => {
   const dispatch = useDispatch();
   const [paginaactual, guardarPaginaActual] = useState(1);
   const [totalpaginas, guardarTotalPaginas] = useState(5);
+  const [userLog, setUserLog] = useState(null)
 
   useEffect(() => {
     const cargarProductos = () => dispatch(readProductAction());
@@ -18,6 +21,17 @@ const AdmonProd = () => {
   const { products } = useSelector((state) => state.products);
   const error = useSelector((state) => state.products.error);
   const cargando = useSelector((state) => state.products.loading);
+
+  useEffect(() => {
+    if(window.localStorage.getItem("accessToken") !== null) {
+      auth.onAuthStateChanged((user) => {
+        if (user) {
+          setUserLog(user)
+        } 
+      });
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userLog]);
 
   useEffect(() => {
     const imagenesPorPagina = 5;

@@ -9,9 +9,9 @@ import {
   SET_UPDATE_USER,
   UPDATE_USER_SUCCESS,
   UPDATE_USER_ERROR,
+  USER_CUSTOM_LOGIN,
   USER_LOGIN,
-  LOGIN_SUCCESS,
-  LOGIN_ERROR,
+  USER_LOGOUT,
 } from "../types";
 
 const initialState = {
@@ -20,14 +20,12 @@ const initialState = {
   url: null,
   error: null,
   loading: false,
-  usuarioeliminar: null,
   usuarioeditar: null,
 };
 
 // eslint-disable-next-line import/no-anonymous-default-export
 export default function (state = initialState, action) {
   switch (action.type) {
-    case LOGIN_SUCCESS:
     case READ_USER:
       return {
         ...state,
@@ -36,12 +34,22 @@ export default function (state = initialState, action) {
     case RECEIVE_PHOTO:
       return {
         ...state,
-        url: action.payload
+        url: action.payload,
+      };
+    case USER_CUSTOM_LOGIN:
+      return {
+        ...state,
+        log: action.payload,
       };
     case USER_LOGIN:
       return {
         ...state,
-        log: action.payload,
+        log: action.payload.user,
+      };
+    case USER_LOGOUT:
+      return {
+        ...state,
+        log: null,
       };
     case REGISTER:
       return {
@@ -51,7 +59,6 @@ export default function (state = initialState, action) {
     case READ_USER_ERROR:
     case DELETE_USER_ERROR:
     case UPDATE_USER_ERROR:
-    case LOGIN_ERROR:
       return {
         ...state,
         loading: false,
