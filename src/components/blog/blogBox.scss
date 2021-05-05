@@ -9,12 +9,12 @@
   margin: 30px auto;
 
   .blog__image {
-    width: 100%;
-    height: auto;
+    width: 370px;
+    height: 280px;
     position: relative;
     img {
-      width: 100%;
-      height: auto;
+      width: 370px;
+      height: 280px;
     }
 
     .blog__hover {
@@ -40,6 +40,9 @@
     padding: 35px;
 
     h4 {
+      text-transform: uppercase;
+    }
+    h3 {
       text-transform: uppercase;
     }
   }

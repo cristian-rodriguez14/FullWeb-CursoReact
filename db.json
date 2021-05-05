@@ -1,0 +1,76 @@
+{
+  "users": [
+    {
+      "photo": "Perfil1.png",
+      "email": "chuo.rod@gmail.com",
+      "password": "jr1234",
+      "rol": "admin",
+      "state": "true",
+      "id": 1
+    },
+    {
+      "photo": "Perfil2.png",
+      "email": "cristian.rodriguez9011@gmail.com",
+      "password": "passwd",
+      "rol": "user",
+      "state": "true",
+      "id": 2
+    }
+  ],
+  "products": [
+    {
+      "imageName": "Producto1.png",
+      "name": "Blue Eyes",
+      "price": 500,
+      "description": "Ojos Azules",
+      "state": false,
+      "id": 1
+    },
+    {
+      "imageName": "Producto2.png",
+      "name": "Lemon Juice",
+      "price": 100,
+      "description": "Jugo de Limón",
+      "state": false,
+      "id": 2
+    },
+    {
+      "imageName": "Producto3.png",
+      "name": "Nanika",
+      "price": 50,
+      "description": "Lo que sea",
+      "state": false,
+      "id": 3
+    },
+    {
+      "imageName": "Screenshot Aglaya Fabian's Phone.jpg",
+      "name": "Aglaya Game",
+      "price": "10000",
+      "description": "Un juego de mesa",
+      "state": true,
+      "id": 4
+    },
+    {
+      "imageName": "skeleton.jpg",
+      "name": "Un esqueleto",
+      "price": "4999",
+      "description": "Algo con forma de esqueleto",
+      "state": false,
+      "id": 5
+    }
+  ],
+  "car": [
+    {
+      "usuarioId": 2,
+      "productoId": 1,
+      "cantidad": 1,
+      "id": 1
+    },
+    {
+      "usuarioId": 2,
+      "productoId": 3,
+      "cantidad": 3,
+      "id": 2
+    }
+  ]
+}

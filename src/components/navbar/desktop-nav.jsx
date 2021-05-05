@@ -1,9 +1,11 @@
 import React from 'react';
 import { Link } from "react-scroll";
+import { Link as Links} from  "react-router-dom";
+
  // SCSS
 import './navbar.scss';
 // Assets
-import LogoImg from '../../assets/navbar/logo.svg';
+import LogoImg from '../../assets/navbar/logo.png';
 import MobileMenuIcon from '../../assets/navbar/mobile-menu.svg';
 
 const desktopNav = (props) => (
@@ -11,7 +13,11 @@ const desktopNav = (props) => (
     <div className="wrapper flex-s-between">
       <div>
         <Link to="hero" spy={true} smooth={true} offset={0} duration={500}>
-          <img src={LogoImg} alt="logo" className="pointer" />
+          <img src={LogoImg} 
+            alt="logo" 
+            className="pointer"  
+            width="250"
+            height="80"/>
         </Link>
       </div>
       <div className="mobile__menu" onClick={props.mobileMenuOpen}>
@@ -20,7 +26,7 @@ const desktopNav = (props) => (
       <div className="desktop__menu">
         <ul className="flex-s-between">
           <li>
-            <Link activeClass="active-link" to="portfolio" spy={true} smooth={true} offset={-70} duration={500}>
+            <Link activeClass="active-link" to="hero" spy={true} smooth={true} offset={-70} duration={500}>
              HOME
             </Link>
           </li>
@@ -35,14 +41,12 @@ const desktopNav = (props) => (
             </Link>
           </li>
           <li>
-            <Link activeClass="active-link" to="contact" spy={true} smooth={true} offset={-70} duration={500}>
-              CONTACTANOS
-            </Link>
+           
           </li>
           <li>
-            <Link activeClass="active-link" to="LOGINt" spy={true} smooth={true} offset={-70} duration={500}>
+            <Links activeClass="active-link" to="/login" >
               LOGIN
-            </Link>
+            </Links>
           </li>
         </ul>
       </div>

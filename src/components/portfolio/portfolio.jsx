@@ -25,20 +25,20 @@ class Portfolio extends React.Component {
         {
           id: "1",
           preview: Preview1,
-          title: "Carne de res",
-          tag: "carne",
+          title: "Dell xps intel core i7",
+          tag: "laptop",
         },
         {
           id: "2",
           preview: Preview2,
-          title: "Tomates",
-          tag: "vegetales",
+          title: "PC gamer kraken ryzen 3s",
+          tag: "desktop",
         },
         {
           id: "3",
           preview: Preview3,
-          title: "Pastas",
-          tag: "harinas",
+          title: "Iphone 12 pro max",
+          tag: "celular",
         },
         {
           id: "4",
@@ -135,24 +135,24 @@ class Portfolio extends React.Component {
                     Todos
                   </li>
                   <li
-                    className={this.state.pickedFilter === "carne" ? "portfolio__nav-active font12" : "font12"}
-                    onClick={() => this.filterGallery("carne")}
+                    className={this.state.pickedFilter === "laptop" ? "portfolio__nav-active font12" : "font12"}
+                    onClick={() => this.filterGallery("laptop")}
                   >
-                    CARNES
+                    LAPTOPS
                   </li>
                   <li
-                    className={this.state.pickedFilter === "vegetales" ? "portfolio__nav-active font12" : "font12"}
-                    onClick={() => this.filterGallery("vegetales")}
+                    className={this.state.pickedFilter === "desktop" ? "portfolio__nav-active font12" : "font12"}
+                    onClick={() => this.filterGallery("desktop")}
                   >
-                    VEGETALES
+                    DESKTOPS
                   </li>
-                  <li className={this.state.pickedFilter === "harinas" ? "portfolio__nav-active font12" : "font12"} 
-                      onClick={() => this.filterGallery("harinas")}>
-                    HARINAS
+                  <li className={this.state.pickedFilter === "celular" ? "portfolio__nav-active font12" : "font12"} 
+                      onClick={() => this.filterGallery("celular")}>
+                    TELEFONOS
                   </li>
-                  <li className={this.state.pickedFilter === "frutas" ? "portfolio__nav-active font12" : "font12"}
-                       onClick={() => this.filterGallery("frutas")}>
-                    FRUTAS
+                  <li className={this.state.pickedFilter === "camara" ? "portfolio__nav-active font12" : "font12"}
+                       onClick={() => this.filterGallery("camara")}>
+                    CAMARAS
                   </li>
                 </ul>
               </div>

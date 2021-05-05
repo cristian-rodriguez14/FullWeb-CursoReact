@@ -15,10 +15,10 @@ const hero = () => (
           <div className="hero-info">
             <h1 className="weight800 font60">Bienvenidos.!</h1>
             <h1 className="weight800 font40">
-              Esta es nuestra pagina web de "Comida"
+              Esta es nuestra pagina web de ventas 
             </h1>
-            <p className="font12">
-              En ella encontraran los mejores ingredientes, recetas y comidas para disfrutae en familia y con sus amigos.
+            <p className="font20">
+              En ella encontraran productos de la mejor calidad y al mas bajo precio del.
             </p>
             <Button label="Contactenos" target={"contact"} />
           </div>

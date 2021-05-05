@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-scroll";
+import { Link as Links} from  "react-router-dom";
 // SCSS
 import "./navbar.scss";
 // Assets
@@ -78,9 +79,9 @@ const mobileNav = (props) => (
           </Link>          
         </li>
         <li className="flex-center">
-          <Link
+          <Links
             activeClass="active-link"
-            to="contact"
+            to="/login"
             spy={true}
             smooth={true}
             offset={-70}
@@ -88,7 +89,7 @@ const mobileNav = (props) => (
             onClick={props.closeMobileMenu}
           >
             LOGIN
-          </Link>          
+          </Links>          
         </li>
       </ul>
     </div>
