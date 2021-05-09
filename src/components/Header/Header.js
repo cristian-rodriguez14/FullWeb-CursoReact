@@ -11,7 +11,7 @@ import classNames from "classnames";
 import useStyles from "./styles";
 
 // components
-import { Typography } from "../Wrappers";
+import { Typography } from "../Wrappers/Wrappers";
 
 // context
 import {

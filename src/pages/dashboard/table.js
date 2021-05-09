@@ -18,7 +18,7 @@ import { ToastContainer, toast } from "react-toastify";
 import firebase from "../../config/firebase";
 
 // components
-import PageTitle from "../../components/PageTitle";
+import PageTitle from "../../components/PageTitle/PageTitle";
 import {
   getUsuarios,
   addUsuario,

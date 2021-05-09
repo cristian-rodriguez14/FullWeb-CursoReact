@@ -73,4 +73,5 @@ function signOut(dispatch, history) {
   localStorage.removeItem("id_token");
   dispatch({ type: "SIGN_OUT_SUCCESS" });
   history.push("/");
+  window.location.reload(true);
 }

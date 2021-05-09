@@ -23,7 +23,7 @@ import tinycolor from "tinycolor2";
 import useStyles from "./styles";
 
 // components
-import { Typography } from "../Wrappers";
+import { Typography } from "../Wrappers/Wrappers";
 
 const typesIcons = {
   "e-commerce": <ShoppingCartIcon />,

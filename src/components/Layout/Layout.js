@@ -8,11 +8,11 @@ import useStyles from "./styles";
 
 // components
 import Header from "../Header/Header";
-import Sidebar from "../Sidebar";
+import Sidebar from "../Sidebar/Sidebar";
 
 // pages
-import Dashboard from "../../pages/dashboard";
-import Tables from "../../pages/tables";
+import Dashboard from "../../pages/dashboard/Dashboard";
+import Tables from "../../pages/tables/Tables";
 
 // context
 import { useLayoutState } from "../../context/LayoutContext";

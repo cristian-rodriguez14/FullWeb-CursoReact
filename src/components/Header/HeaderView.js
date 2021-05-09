@@ -15,7 +15,7 @@ import {
 import { fade } from "@material-ui/core/styles/colorManipulator";
 import classNames from "classnames";
 
-import { Typography } from "../Wrappers";
+import { Typography } from "../Wrappers/Wrappers";
 
 const Header = ({ classes, isSidebarOpened, toggleSidebar, ...props }) => (
   <AppBar position="fixed" className={classes.appBar}>
